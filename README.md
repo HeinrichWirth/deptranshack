@@ -6,6 +6,8 @@
 
 [Схема архитектуры](docs/PIPELINE_DIAGRAM.md) · [Как пользоваться демонстрацией](docs/WEB_GUIDE.md) · [Как работает метод](docs/ARCHITECTURE.md) · [История исследований](docs/RESEARCH.md)
 
+**[Материалы HW для ЛЦТ2026](docs/SUBMISSION.md):** презентация, видео, описание метода и соответствие требованиям кейса.
+
 ## Запуск
 
 Нужны **Git и Docker с Compose**. На Windows — Docker Desktop в режиме Linux containers. ROS 2, Python и Node на компьютере устанавливать не надо.
