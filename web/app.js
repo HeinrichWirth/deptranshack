@@ -263,7 +263,7 @@ function renderObjects() {
     for (const value of [
       `#${t.id}`,
       `${t.first_frame}–${t.last_frame}`,
-      `${number(t.nearest_range_m)} м`,
+      `${number(t.first_distance_m)} м`,
       `${number(t.width_m)} × ${number(t.height_m)} м`,
       `${number(t.bbox_area_m2, 3)} м²`,
     ]) {
