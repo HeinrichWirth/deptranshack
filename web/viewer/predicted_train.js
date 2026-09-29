@@ -51,7 +51,7 @@ window.fetch=(resource,options)=>{
   $('contactList').replaceChildren();for(const p of m.nearest){const b=document.createElement('button');b.textContent=`${p.range.toFixed(2)} м от лидара · путь ${p.station.toFixed(2)} м`;b.onclick=()=>selectPoint(p);$('contactList').append(b);}
  }
  const dot=(p,a)=>p[0]*a[0]+p[1]*a[1]+p[2]*a[2];
- function topXY(p){return [dot(p,topAxes.forward),dot(p,topAxes.left)];}
+ function topXY(p){return M.topView(p,topAxes);}
  function drawTop(){
   const c=canvas('top'),{ctx,w,h}=c;if(!route||!meta){topTransform=null;textCenter(c,'Путь появится при наличии прогноза');return;}
   const lines=[meta.curves.left,meta.curves.right,meta.curves.contact],all=lines.flat().map(topXY);
@@ -69,7 +69,7 @@ window.fetch=(resource,options)=>{
   if(layers.has(30)&&meta.run!=='OLD'&&meta.comparison_curves){ctx.strokeStyle='#ffffff';ctx.setLineDash([5,4]);for(const name of ['left','right','contact']){ctx.beginPath();meta.comparison_curves[name].forEach((p,i)=>{const [x,y]=topTransform(topXY(p));i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();}ctx.setLineDash([]);}
   const pose=M.sample(route,distance),p=topTransform(topXY(pose.position)),end=topTransform(topXY(pose.position.map((v,i)=>v+pose.forward[i]*3)));
   const angle=Math.atan2(end[1]-p[1],end[0]-p[0]);ctx.save();ctx.translate(...p);ctx.rotate(angle);ctx.fillStyle='#fff';ctx.beginPath();ctx.moveTo(10,0);ctx.lineTo(-6,-6);ctx.lineTo(-6,6);ctx.closePath();ctx.fill();ctx.restore();
-  ctx.fillStyle='#a4bccf';ctx.font='11px system-ui';ctx.fillText('Белая стрелка — поезд · весь прогноз выбранного кадра',12,h-10);
+  ctx.fillStyle='#a4bccf';ctx.textAlign='left';ctx.font='11px system-ui';ctx.fillText('Вперёд ↑ · стороны совпадают со срезом · белая стрелка — поезд',12,h-10);
  }
  function requestSlice(){
   if(!route||!ready)return;if(busy){pending=true;return;}
@@ -100,7 +100,7 @@ window.fetch=(resource,options)=>{
    route=M.build(meta.curves,meta.up);route.offset=[0,0,1.5];topAxes=M.sample(route,0);topPoints=[];
    if(initialParams.get('focus')==='1'){let selected=[];for(let j=0;j<meta.real_points*4;j+=4)if(rows[j+3]===4)selected.push([rows[j],rows[j+1],rows[j+2]]);if(selected.length){let c=[0,1,2].map(k=>{let a=selected.map(p=>p[k]).sort((a,b)=>a-b);return a[Math.floor(a.length/2)];}),best=Infinity,at=0;for(let k=0;k<route.nodes.length-1;k++){let a=route.nodes[k],b=route.nodes[k+1],v=b.center.map((x,i)=>x-a.center[i]),w=c.map((x,i)=>x-a.center[i]),len=v.reduce((s,x)=>s+x*x,0),t=Math.max(0,Math.min(1,v.reduce((s,x,i)=>s+x*w[i],0)/len)),err=v.reduce((s,x,i)=>s+(w[i]-t*x)**2,0);if(err<best){best=err;at=a.distance+t*(b.distance-a.distance);}}pendingDistance=Math.max(0,at-number('width',1)/2);}}
 
-   for(let j=0;j<rows.length;j+=4){const layer=rows[j+3];if(layer>=20||(!layer&&(j/4)%19))continue;const p=topXY(rows.subarray(j,j+3));if(p[0]>=-10&&p[0]<=route.length+10&&Math.abs(p[1])<20)topPoints.push([...p,layer]);}
+   for(let j=0;j<rows.length;j+=4){const layer=rows[j+3];if(layer>=20||(!layer&&(j/4)%19))continue;const p=topXY(rows.subarray(j,j+3));if(p[1]>=-10&&p[1]<=route.length+10&&Math.abs(p[0])<20)topPoints.push([...p,layer]);}
    $('positionSeek').max=route.length;enable(true);pan=[0,0];
    worker=new Worker('/predicted_train_worker.js');
    worker.onmessage=event=>{

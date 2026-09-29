@@ -94,7 +94,9 @@ const PredictedTrainMath=(()=>{
   nearest.sort((a,b)=>a.range-b.range);
   return {points:result.slice(0,n),count,nearest:nearest.slice(0,10)};
  }
- return {build,sample,project,slice,prepareInspection,inspectSlice,penetration,intrusion};
+ // Screen horizontal matches the slice; forward is drawn upward by the canvas.
+ function topView(point,axes){return [dot(point,axes.left),dot(point,axes.forward)];}
+ return {build,sample,project,slice,prepareInspection,inspectSlice,penetration,intrusion,topView};
 })();
 if(typeof module!=='undefined')module.exports=PredictedTrainMath;
 

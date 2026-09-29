@@ -3,3 +3,6 @@
 .contacts{border:1px solid #455b6e;border-radius:8px;padding:14px;background:#182632}#contactInfo{color:#ff9c93}#contactList{display:flex;flex-wrap:wrap;gap:6px}#contactList button{font-size:12px;padding:5px 8px}#pointInfo{font-variant-numeric:tabular-nums}#stepPresets button{padding:5px 10px}
 
 #diagnosticNotice{padding:16px;border:2px solid #e8a344;background:#392c18;color:#ffe5b8;border-radius:8px;font-size:16px;font-weight:600}#cases{max-height:165px;overflow:auto}#failureCases button{font-size:13px;padding:7px}
+
+/* Forward-up overview keeps the rail spacing readable. */
+#top{height:460px}
