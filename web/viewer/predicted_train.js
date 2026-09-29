@@ -16,8 +16,6 @@ window.fetch=(resource,options)=>{
  let selectedPoint=null;
  const initialParams=new URLSearchParams(location.search);let initialSource=true,pendingDistance=Number(initialParams.get('distance')||0);if(!Number.isFinite(pendingDistance))pendingDistance=0;
  if(Number(initialParams.get('width'))>0)$('width').value=Number(initialParams.get('width'));
- if(['5','20'].includes(initialParams.get('extension')))$('extensionLength').value=initialParams.get('extension');
- $('extend5').checked=initialParams.get('extension')!=='0'&&['5','20'].includes(initialParams.get('extension'));
  const active=()=>{const s=new Set([...document.querySelectorAll('[data-layer]:checked')].map(e=>+e.dataset.layer));if(s.has(30)){s.add(31);s.add(32);}return s;};
  const status=(text,error=false)=>{$('status').textContent=text;$('status').classList.toggle('error',error);};
  const number=(id,fallback)=>{const x=Number($(id).value);return Number.isFinite(x)&&x>0?x:fallback;};
@@ -88,7 +86,7 @@ window.fetch=(resource,options)=>{
   $('frame').value=source.source_frame_index;$('frameSeek').value=index;$('source').textContent=`${source.name} · ${index+1} / ${run.frames.length}`;
   $('sliceInfo').textContent='—';$('position').textContent='—';$('download').removeAttribute('href');$('positionSeek').value=0;drawSlice();drawTop();status('Читаю сохранённый пакет облаков и прогноз…');
   try{
-   const url=`/api/predicted-train/frame?run=${encodeURIComponent(run.id)}&index=${index}&model=${initialParams.get('model')||''}&object=${initialParams.get('object')||''}&new_object=${initialParams.get('new_object')||''}&track_run=${initialParams.get('track_run')||''}&extension=${$('extend5').checked?$('extensionLength').value:0}`,response=await fetch(url,{signal:abort.signal});
+   const url=`/api/predicted-train/frame?run=${encodeURIComponent(run.id)}&index=${index}&model=${initialParams.get('model')||''}&object=${initialParams.get('object')||''}&new_object=${initialParams.get('new_object')||''}&track_run=${initialParams.get('track_run')||''}`,response=await fetch(url,{signal:abort.signal});
    if(!response.ok)throw Error((await response.json()).error||'Не удалось прочитать исходные данные');
    const data=await response.arrayBuffer();if(current!==token)return;
    const size=new DataView(data).getUint32(0,true);meta=JSON.parse(new TextDecoder().decode(new Uint8Array(data,4,size)));
@@ -122,8 +120,6 @@ window.fetch=(resource,options)=>{
  }
  function selectRun(){const oldSource=meta?.source_frame_index??run?.frames[index]?.source_frame_index;if(!initialSource)pendingDistance=distance;run=runs.find(r=>r.id===$('run').value);if(!run)return;$('frame').max=run.frames.at(-1).source_frame_index;$('frameSeek').max=run.frames.length-1;const wanted=initialSource?Number(initialParams.get('source')||820):oldSource;const source=run.frames.findIndex(f=>f.source_frame_index===wanted);initialSource=false;loadFrame(Math.max(0,source));}
  $('run').onchange=selectRun;$('frame').onchange=()=>{const s=Number($('frame').value);let k=run.frames.findIndex(f=>f.source_frame_index>=s);loadFrame(k<0?run.frames.length-1:k);};$('frameSeek').onchange=()=>loadFrame(Number($('frameSeek').value));
- $('extend5').onchange=()=>loadFrame(index);
- $('extensionLength').onchange=()=>loadFrame(index);
  $('prevFrame').onclick=()=>loadFrame(index-1);$('nextFrame').onclick=()=>loadFrame(index+1);
  $('play').onclick=toggle;$('back').onclick=()=>{pause();setDistance(distance-number('step',1));};$('forward').onclick=()=>{pause();setDistance(distance+number('step',1));};
  $('start').onclick=()=>{pause();setDistance(0);};$('positionSeek').oninput=()=>{pause();setDistance(+$('positionSeek').value);};
@@ -145,7 +141,6 @@ window.fetch=(resource,options)=>{
  document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
  new ResizeObserver(()=>{drawSlice();drawTop();}).observe(document.querySelector('.workspace'));
  async function init(){enable(false);try{const response=await fetch('/api/predicted-train/runs');if(!response.ok)throw Error('Сервер сравнения недоступен');const data=await response.json();runs=data.runs;for(const r of runs){const o=document.createElement('option');o.value=r.id;o.textContent=r.label;$('run').append(o);}if(!runs.length){status('Нет сохранённых прогнозов',true);return;}$('run').value=initialParams.get('run')||resultJob||runs[0].id;selectRun();const cases=await (await fetch('/api/review-cases')).json();for(const c of cases){const b=document.createElement('button');b.dataset.reviewSource=c.source;b.textContent=`${c.source} · ${['HELD_COMPLETE_PIPELINE_PATH','HELD_PREVIOUS_VERIFIED_FULL_CHAIN'].includes(c.label)?'полный прогноз':c.label==='HELD_NEAR_PLANE'?'ближняя опора':c.label.startsWith('NEAR_ONLY')||c.label==='CURRENT_NEAR_ONLY'?'только 8 м':c.label==='RAIL_FALLBACK_AFTER_FULL_STEP2_FAILURE'?'по ходовым':c.near.count?'попадания':'осмотр'}`;b.onclick=()=>{pause();$('run').value='FULL';run=runs.find(r=>r.id==='FULL');$('frame').max=run.frames.at(-1).source_frame_index;$('frameSeek').max=run.frames.length-1;pendingDistance=c.near.count?Math.min(7,Math.floor(c.near.nearest_range_m*2)/2):c.default_distance;loadFrame(run.frames.findIndex(f=>f.source_frame_index===c.source));};$(c.far||c.source%2?'cases':'failureCases').append(b);}}catch(e){status(e.message,true);}}
- $('extend5').checked=false;$('extend5').disabled=true;$('extensionLength').disabled=true;
  init();
 })();
 
