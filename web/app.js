@@ -102,6 +102,7 @@ const names = {
   READY: "Файл готов к расчёту",
   PREPARING: "Подготавливаем выбранный топик…",
   RUNNING: "Идёт расчёт",
+  LIVE_RUNNING: "Принимаем поток ROS 2",
   COMPLETE: "Расчёт завершён",
   FAILED: "Расчёт остановлен с ошибкой",
   INTERRUPTED: "Прогон прерван",
@@ -120,8 +121,8 @@ async function tick() {
     if (state.error) $("error").textContent = state.error;
     if (!$("topic").options.length || $("topic").dataset.job !== job) {
       $("topic").replaceChildren();
-      for (const t of state.topics || [])
-        $("topic").add(new Option(`${t.name} · ${t.count} кадров`, t.id));
+      for (const t of state.topics?.length ? state.topics : state.topic ? [state.topic] : [])
+        $("topic").add(new Option(t.count == null ? t.name : `${t.name} · ${t.count} кадров`, t.id));
       $("topic").dataset.job = job;
     }
     $("processed").textContent = state.processed;
@@ -133,7 +134,7 @@ async function tick() {
       await showSlice();
       $("inspect").disabled = false;
     }
-    if (state.status === "COMPLETE" && lastObjects !== job) {
+    if ((state.status === "COMPLETE" && lastObjects !== job) || state.status === "LIVE_RUNNING") {
       await loadObjects();
       lastObjects = job;
     }
@@ -296,8 +297,21 @@ function showObject(t) {
   window.open(viewer(t.size_frame, t.id), "_blank");
 }
 $("singles").onchange = renderObjects;
-loadJobs()
-  .then(() => {
+api("/api/health")
+  .then(async (health) => {
+    if (health.live) {
+      $("drop").style.display = "none";
+      $("start").hidden = true;
+      $("connection").textContent = "ROS 2 · живой поток";
+      $("inputHelp").textContent = "Облака поступают из ROS 2. Выберите текущий прогон, чтобы следить за расчётом.";
+      $("state").textContent = "Ожидаем поток ROS 2";
+    }
+    await loadJobs();
+    if (health.live && !job) {
+      const jobs = await api("/api/jobs");
+      job = (jobs.find((j) => j.status === "LIVE_RUNNING") || jobs[0])?.id || "";
+      $("jobs").value = job;
+    }
     if (job) selectJob(job);
   })
   .catch(fail);
