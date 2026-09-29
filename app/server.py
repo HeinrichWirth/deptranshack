@@ -6,7 +6,7 @@ from pathlib import Path
 from urllib.parse import urlsplit, parse_qs, unquote
 from .jobs import JobManager, upload
 from .storage import JOBS, job_path, read_json
-from .results import frames, objects, binary_frame, slice_frame
+from .results import frames, objects, binary_frame, slice_frame, live_result
 
 WEB = Path(__file__).resolve().parents[1] / "web"
 manager = JobManager()
@@ -32,7 +32,7 @@ class Handler(BaseHTTPRequestHandler):
             job = get("job", get("run"))
             source = int(get("source", "0"))
             if route.path == "/api/health":
-                return self.send(dict(ok=True))
+                return self.send(dict(ok=True, live=os.environ.get("RAIL_LIVE_ONLY") == "1"))
             if route.path == "/api/jobs":
                 return self.send(
                     [
@@ -44,6 +44,8 @@ class Handler(BaseHTTPRequestHandler):
                 )
             if route.path == "/api/status":
                 return self.send(manager.status(job))
+            if route.path == "/api/live-result":
+                return self.send(live_result(job))
             if route.path == "/api/objects":
                 return self.send(objects(job))
             if route.path == "/api/slice":

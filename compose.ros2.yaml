@@ -1,0 +1,45 @@
+services:
+  web:
+    build: .
+    image: rail-inspector-live
+    ports:
+      - "127.0.0.1:${RAIL_WEB_PORT:-8870}:8080"
+    environment:
+      RAIL_LIVE_ONLY: "1"
+    volumes:
+      - ros-results:/data
+    init: true
+  engine:
+    image: rail-inspector-live
+    build: .
+    command: ["python", "-m", "app.live"]
+    ports:
+      - "127.0.0.1:8871:8871"
+    volumes:
+      - ros-results:/data
+    shm_size: 1gb
+    init: true
+    stop_grace_period: 20s
+    healthcheck:
+      disable: true
+  ros:
+    shm_size: 512mb
+    build:
+      context: .
+      dockerfile: ros2/Dockerfile
+    depends_on:
+      web:
+        condition: service_healthy
+      engine:
+        condition: service_started
+    environment:
+      CLOUD_TOPIC: ${CLOUD_TOPIC:-/lidar_points}
+      ROS_DOMAIN_ID: ${ROS_DOMAIN_ID:-0}
+      IDLE_EXIT_SECONDS: ${IDLE_EXIT_SECONDS:-0}
+    volumes:
+      - ros-bag:/bag
+    init: true
+    stop_grace_period: 15s
+volumes:
+  ros-results:
+  ros-bag:

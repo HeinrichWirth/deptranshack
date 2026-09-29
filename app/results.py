@@ -1,6 +1,6 @@
 """Read saved causal results. Display grouping never enters the prediction engine."""
 
-import json, struct
+import json, struct, time
 import numpy as np
 from .storage import job_path, read_json, read_log
 from .grouping import group_tracks
@@ -14,15 +14,55 @@ def frames(job_id):
     ]
 
 
-def objects(job_id):
+def objects(job_id, through_source=None):
     path = job_path(job_id)
-    raw = read_json(path / "result/tracks.json", {"tracks": []})["tracks"]
+    snapshot = read_json(path / "result/live_tracks.json", {})
+    raw = read_json(path / "result/tracks.json", snapshot or {"tracks": []})["tracks"]
     generations = {r["source_frame"]: r.get("generation", 0) for r in frames(job_id)}
+    completed_source = max(generations, default=-1)
+    if through_source is not None:
+        completed_source = min(completed_source, through_source)
+    # The observer writes just before the GEOMETRY_COMPLETE record. Do not let
+    # that next observation confirm an object in an older published result.
+    raw = [dict(track, observations=[o for o in track["observations"]
+                                    if o["source_frame"] <= completed_source]) for track in raw]
+    generations.update({int(k): v for k, v in snapshot.get("generations", {}).items()})
     return dict(
         tracks=group_tracks(raw, generations),
         raw_tracks=len(raw),
         grouping="fixed_world_anchor_10m",
     )
+
+
+def live_result(job_id):
+    """Current completed batch only; old objects never assert a current intrusion."""
+    rows = frames(job_id)
+    state = read_json(job_path(job_id) / "job.json")
+    if not rows:
+        return dict(job=job_id, job_status=state["status"], source_frame=None,
+                    assessment_available=False, obstacle_detected=None, objects=[])
+    row = rows[-1]
+    stale = state["status"] != "LIVE_RUNNING" or time.perf_counter() - row["clock"] > 1
+    snapshot = read_json(job_path(job_id) / "result/live_tracks.json", {})
+    snapshot_ready = snapshot.get("source_frame", -1) >= row["source_frame"]
+    valid = not stale and snapshot_ready and row["status"] in ("INTRUSION", "NO_CONFIRMED_COMPONENT_THIS_BATCH")
+    current = []
+    for group in objects(job_id, through_source=row["source_frame"])["tracks"]:
+        observations = [o for o in group["observations"] if o["source_frame"] == row["source_frame"]]
+        if observations and group["status"] == "CONFIRMED":
+            current.append(dict(id=group["id"], first_frame=group["first_frame"],
+                first_distance_m=group["first_distance_m"],
+                current_distance_m=min(o["nearest_range_m"] for o in observations),
+                width_m=group["width_m"], height_m=group["height_m"], area_m2=group["bbox_area_m2"]))
+    meta = read_json(job_path(job_id) / "result/batches" / f"{row['source_frame']:06d}.json")["meta"]
+    return dict(job=job_id, job_status=state["status"], source_frame=row["source_frame"],
+        header_time_ns=meta["header_time_ns"], frame_id=meta["source_frame_id"],
+        assessment_available=valid, stale=stale, snapshot_ready=snapshot_ready,
+        obstacle_detected=bool(current) if valid else None,
+        distance_m=min((o["current_distance_m"] for o in current), default=None) if valid else None,
+        horizon_m=(row.get("extension_guard") or {}).get("accepted_end_m"),
+        algorithm_ms=row["total_ms"]-row["export_ms"], status=row["status"],
+        objects=current if valid else [], unknown_beyond_horizon=True)
 
 
 def load_frame(job_id, source, object_id=0):
@@ -48,7 +88,7 @@ def load_frame(job_id, source, object_id=0):
         if selected:
             for observation in selected["observations"]:
                 if observation["source_frame"] == source:
-                    layers[observation["source_indices"]] = 4
+                    layers[observation.get("source_indices", [])] = 4
     return row, xyz, layers, pair, contact, prior
 
 

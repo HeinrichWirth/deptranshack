@@ -97,6 +97,8 @@ class JobManager:
                 write_json(path, state)
 
     def start(self, job_id, topic_id):
+        if os.environ.get("RAIL_LIVE_ONLY") == "1":
+            raise ValueError("Этот сервер принимает ROS 2 поток. Для DB3 используйте обычный запуск.")
         with self.lock:
             if self.running:
                 raise ValueError("Один расчёт уже идёт. Дождитесь завершения или остановите его.")

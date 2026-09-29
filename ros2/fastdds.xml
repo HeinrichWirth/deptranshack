@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<profiles xmlns="http://www.eprosima.com/XMLSchemas/fastRTPS_Profiles">
+  <transport_descriptors>
+    <transport_descriptor>
+      <transport_id>cloud_shm</transport_id>
+      <type>SHM</type>
+      <segment_size>67108864</segment_size>
+      <maxMessageSize>33554432</maxMessageSize>
+    </transport_descriptor>
+    <transport_descriptor>
+      <transport_id>cloud_udp</transport_id>
+      <type>UDPv4</type>
+    </transport_descriptor>
+  </transport_descriptors>
+  <participant profile_name="rail_cloud_transport" is_default_profile="true">
+    <rtps>
+      <useBuiltinTransports>false</useBuiltinTransports>
+      <userTransports>
+        <transport_id>cloud_shm</transport_id>
+        <transport_id>cloud_udp</transport_id>
+      </userTransports>
+    </rtps>
+  </participant>
+</profiles>

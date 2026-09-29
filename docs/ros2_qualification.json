@@ -1,0 +1,150 @@
+{
+  "job": "8a647d4265a141b28f5d94e465e7670a",
+  "source_messages": 1510,
+  "received": 1509,
+  "cdr_exact_matches": 1509,
+  "missing_source_indices": [
+    1
+  ],
+  "geometry_complete": 357,
+  "causal_batches_checked": 357,
+  "confirmed_groups": 9,
+  "algorithm_ms": {
+    "median": 263.8523019995773,
+    "p95": 328.21337600180414,
+    "maximum": 371.89643499732483
+  },
+  "stages_ms": {
+    "prepare_ms": {
+      "median": 65.29885200143326,
+      "p95": 108.16030540008796,
+      "maximum": 157.8115979937138
+    },
+    "solve_ms": {
+      "median": 172.42617400188465,
+      "p95": 219.16177439707099,
+      "maximum": 264.3615199995111
+    },
+    "rail_refresh_ms": {
+      "median": 0.2609430011943914,
+      "p95": 0.34263239795109257,
+      "maximum": 0.41223899461328983
+    },
+    "path_policy_ms": {
+      "median": 9.71631400170736,
+      "p95": 13.205323804868385,
+      "maximum": 16.03346999763744
+    },
+    "envelope_build_ms": {
+      "median": 0.6197219991008751,
+      "p95": 1.060448396310676,
+      "maximum": 1.2080760061508045
+    },
+    "query_ms": {
+      "median": 5.274172995996196,
+      "p95": 8.479204404284244,
+      "maximum": 15.090403998328838
+    },
+    "cluster_ms": {
+      "median": 0.017290993127971888,
+      "p95": 1.575202000094577,
+      "maximum": 14.492046000668779
+    },
+    "tracker_ms": {
+      "median": 0.5142740046721883,
+      "p95": 1.4264089986681927,
+      "maximum": 12.17143599933479
+    }
+  },
+  "callback_to_send_ms": {
+    "median": 0.3470660012681037,
+    "p95": 1.960011996561661,
+    "maximum": 18.80287899984978
+  },
+  "dds_result_messages": 333,
+  "dds_positive_messages": 55,
+  "dds_unknown_messages": 19,
+  "first_confirmed": {
+    "job": "8a647d4265a141b28f5d94e465e7670a",
+    "job_status": "LIVE_RUNNING",
+    "source_frame": 139,
+    "header_time_ns": 946685800933400989,
+    "frame_id": "hesai_lidar",
+    "assessment_available": true,
+    "stale": false,
+    "snapshot_ready": true,
+    "obstacle_detected": true,
+    "distance_m": 66.6055171996575,
+    "horizon_m": 69.1791275749916,
+    "algorithm_ms": 283.1039169977885,
+    "status": "INTRUSION",
+    "objects": [
+      {
+        "id": 1,
+        "first_frame": 133,
+        "first_distance_m": 69.3405583213977,
+        "current_distance_m": 66.6055171996575,
+        "width_m": 1.5062223197565134,
+        "height_m": 1.8416814998944049,
+        "area_m2": 2.7739817810236054
+      }
+    ],
+    "unknown_beyond_horizon": true,
+    "observer_wall_time": 1790657382.7208962
+  },
+  "complete": {
+    "pass_": true,
+    "received": 1509,
+    "config": {
+      "input_hz": 10,
+      "registration_stride": 1,
+      "geometry_stride_original": 1,
+      "geometry_offset_original": 0,
+      "near_m": 8.0,
+      "width_m": 2.1,
+      "height_m": 3.0,
+      "penetration_m": 0.03,
+      "extension_m": 20.0,
+      "far_forward_only": true,
+      "near_compute_target_ms": 20,
+      "near_result_deadline_ms": 100,
+      "registration_admission_ms": 100,
+      "pose_result_deadline_ms": 250,
+      "geometry_admission_ms": 400,
+      "geometry_result_deadline_ms": 800,
+      "model_max_age_ms": 1000,
+      "near_calibration_hold_ms": 5000,
+      "recovery_watchdog_ms": 1800,
+      "ring_slots": 48,
+      "max_points": 400000,
+      "source_sha256": "73ee5bfc2087bb160267110563b298a9629ac9e3df1459d857ec72ce1ef89d60",
+      "primary_vertical_agreement_m": 0.03,
+      "primary_lateral_agreement_m": 0.1,
+      "primary_history_versions": 3,
+      "full_hz": 3,
+      "bottom_penetration_m": 0.1,
+      "far_weight_start_m": 70.0,
+      "min_weighted_points": 3.0,
+      "history_raw_frames": 12,
+      "extension_guard_enabled": true
+    },
+    "transport": "ROS 2 DDS / bounded acknowledged CDR",
+    "payload_sha256": "0ecbdcb8e7e9419ecb1f425a412216f1535d25b8b9fcd483f4a637212b46754c",
+    "pending_replacements": {
+      "near": 0,
+      "registration": 36,
+      "pose": 0,
+      "geometry": 0,
+      "model_near": 0,
+      "model_far": 0,
+      "recovery_in": 0,
+      "recovery_out": 0,
+      "retry": 0,
+      "near_reference": 0
+    },
+    "runtime_unchanged": true,
+    "no_saved_poses": true,
+    "no_annotation": true,
+    "error": null
+  }
+}

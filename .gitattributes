@@ -1,1 +1,4 @@
 * -text
+*.pdf binary
+*.pptx binary
+*.webm binary

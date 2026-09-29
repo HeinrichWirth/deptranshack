@@ -5,7 +5,14 @@ const fs = require("node:fs");
 (async () => {
   const base = process.env.RAIL_URL || "http://127.0.0.1:8870";
   const jobs = await (await fetch(base + "/api/jobs")).json();
-  const job = jobs.find((x) => x.status === "COMPLETE");
+  let job;
+  for (const candidate of jobs.filter((x) => x.status === "COMPLETE")) {
+    const status = await (await fetch(base + "/api/status?job=" + candidate.id)).json();
+    if (status.frames.length) {
+      job = candidate;
+      break;
+    }
+  }
   assert(job, "Need one completed run");
   const browser = await chromium.launch({
     channel: process.env.BROWSER_CHANNEL || "msedge",
