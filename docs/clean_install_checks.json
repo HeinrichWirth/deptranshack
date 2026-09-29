@@ -1,0 +1,58 @@
+{
+  "date": "2026-09-29",
+  "commit": "c21ca6a9b69483164a399eb62e260e98992a0d42",
+  "fresh_clone": true,
+  "no_cache_app_build": true,
+  "new_volumes": true,
+  "source_files": 416,
+  "unit_tests": 11,
+  "native": {
+    "count": 6,
+    "exact": true,
+    "hashes": [
+      "418f7c8cc430c2fcff5c41e10982cd6fff9d5bc7fdbf2b759ef7656a4d075d02  /app/engine/native/_obstacle_envelope.cpython-312-x86_64-linux-gnu.so",
+      "68842e22effde1ecdd999fc5954a9b21bd66cec002fcf9e48becca9eafe95186  /app/engine/baseline/app/MVP/c4_v2/native/_c4_v2.cpython-312-x86_64-linux-gnu.so",
+      "6e1e483443df33ea01211a41a5b15570b40ea0db07098681e9ea7b1e58e24d6f  /app/engine/baseline/app/MVP/realtime_final/native/_c4_rt.cpython-312-x86_64-linux-gnu.so",
+      "bb11d2e8fbc16efd401d20b75d76414dced9a2540b6377879248b02456d85ec4  /app/engine/baseline/app/MVP/performance_final2/native/_c4_sprint.cpython-312-x86_64-linux-gnu.so",
+      "c41b1eb324a4348d3429c52443254d3d2ccfe726516bb0e2e04bbfb791b9dbd8  /app/engine/native/_envelope.cpython-312-x86_64-linux-gnu.so",
+      "f89d5de1ca7fa89761e9abfbec2e3673d8175428a091cbb460289711ecb76b7c  /app/engine/baseline/app/MVP/performance_final/native/_final_c4_native.cpython-312-x86_64-linux-gnu.so"
+    ]
+  },
+  "web": {
+    "confirmed_groups": 9,
+    "browser_upload": true,
+    "temporary_input_removed": true,
+    "median_ms": 260.745824,
+    "max_ms": 345.737378,
+    "p95_ms": 312.98718,
+    "restart_persistent": true,
+    "received": 1510,
+    "job": "ae80fde40fef4ace9753e7f1f91e28b9",
+    "processed": 382
+  },
+  "ros_first": {
+    "sent": 1438,
+    "accepted": 1437,
+    "job": "900ee1464d4b4c1b9fccf42f39aaa8b2",
+    "received_bridge": 1509,
+    "confirmed_groups": 1,
+    "replaced": 71,
+    "quality_pass": false,
+    "processed": 164
+  },
+  "ros_repeat": {
+    "confirmed_groups": 10,
+    "sent": 1509,
+    "median_ms": 258.092235,
+    "replaced": 0,
+    "max_ms": 370.250985,
+    "temporary_bag_removed": true,
+    "p95_ms": 321.215534,
+    "dds_results": 324,
+    "received": 1509,
+    "job": "70b6edb1174d498f894efe188248c00b",
+    "processed": 341
+  },
+  "open_issue": "ROS2 transport/admission robustness under concurrent load is not qualified; root cause of first-run stalls unresolved",
+  "physical_organizer_stand_tested": false
+}

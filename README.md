@@ -72,6 +72,8 @@ docker compose cp inspector:/data/jobs ./saved-runs
 
 ## Проверка установки
 
+[Отчёт о чистой установке из GitHub](docs/CLEAN_INSTALL_VALIDATION.md): сборка без кэша, загрузка через браузер и проверка ROS 2.
+
 ```sh
 docker compose exec inspector python -m unittest discover -s tests -v
 docker compose logs --tail=80 inspector
