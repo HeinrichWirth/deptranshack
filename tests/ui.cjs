@@ -27,6 +27,15 @@ const fs = require("node:fs");
   await page.waitForFunction(
     () => document.querySelectorAll("#objects tr").length > 0,
   );
+  const checkNumbers = async () => {
+    const numbers = await page.locator("#objects tr td:first-child").allTextContents();
+    assert.deepEqual(numbers, numbers.map((_, i) => String(i + 1)));
+  };
+  await checkNumbers();
+  await page.locator("#singles").check();
+  await checkNumbers();
+  await page.locator("#singles").uncheck();
+  await checkNumbers();
   await page.screenshot({
     path: "local-results/dashboard.png",
     fullPage: true,

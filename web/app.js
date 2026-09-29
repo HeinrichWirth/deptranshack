@@ -259,10 +259,10 @@ function renderObjects() {
   );
   $("objectCount").textContent = shown.length;
   $("objects").replaceChildren();
-  for (const t of shown) {
+  for (const [index, t] of shown.entries()) {
     const row = document.createElement("tr");
     for (const value of [
-      `#${t.id}`,
+      `${index + 1}`,
       `${t.first_frame}–${t.last_frame}`,
       `${number(t.first_distance_m)} м`,
       `${number(t.width_m)} × ${number(t.height_m)} м`,
@@ -275,17 +275,17 @@ function renderObjects() {
     const action = document.createElement("td"),
       button = document.createElement("button");
     button.textContent = "Посмотреть";
-    button.onclick = () => showObject(t);
+    button.onclick = () => showObject(t, index + 1);
     action.append(button);
     row.append(action);
     $("objects").append(row);
   }
 }
-function showObject(t) {
+function showObject(t, number) {
   const detail = $("objectDetail");
   detail.replaceChildren();
   const title = document.createElement("strong");
-  title.textContent = `Объект #${t.id} · исходные группы ${t.member_ids.join(", ")} · кадры обнаружения:`;
+  title.textContent = `Объект №${number} · кадры обнаружения:`;
   detail.append(title, document.createElement("br"));
   for (const source of t.frames) {
     const link = document.createElement("a");
