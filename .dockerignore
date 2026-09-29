@@ -1,0 +1,6 @@
+.git
+**/__pycache__
+**/*.pyc
+local-results
+data
+*.db3

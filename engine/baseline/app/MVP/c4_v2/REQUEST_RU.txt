@@ -1,0 +1,2240 @@
+# C4 V2 — FINAL PRODUCTION SPEED SOLUTION
+# INCREMENTAL PERSISTENT TRACKER + FULL NATIVE CANDIDATE SOLVER
+# NO MORE MICRO-OPTIMIZATION
+
+Времени до сдачи почти нет.
+
+Предыдущие performance-sprints показали предел
+локальных оптимизаций старой архитектуры.
+
+Текущий лучший equivalent backend:
+
+native_batch_spatial
+
+примерно:
+
+full solve median ~1.1 s
+C4 median ~0.88 s.
+
+Это всё ещё слишком медленно.
+
+При этом установлено:
+
+- residual kernel уже ускорен кратно;
+- FD Jacobian уже ускорен кратно;
+- small-N NN уже ускорен;
+- spatial cache уже есть;
+- KDTree tricks проверены;
+- Python threading не масштабируется;
+- SciPy least_squares всё ещё вызывается тысячами;
+- H8 batch остаётся частичным;
+- Python/SciPy callbacks остаются;
+- marching каждый раз в значительной мере
+  реконструирует уже известную static geometry.
+
+Поэтому больше НЕ делать
+очередные H1/H2/H3 microoptimizations.
+
+Нужна архитектурная версия C4 V2.
+
+==================================================
+0. ГЛАВНАЯ ЦЕЛЬ
+==================================================
+
+Получить production-oriented C4,
+который поддерживает статическую геометрию пути
+между последовательными кадрами.
+
+Вместо:
+
+FRAME T:
+reconstruct 30–80m
+
+FRAME T+1:
+снова reconstruct 30–80m
+
+FRAME T+2:
+снова reconstruct 30–80m
+
+нужно:
+
+FIRST VALID FRAME:
+full bootstrap + full C4
+
+NEXT FRAME:
+reuse already mapped trajectory
++
+validate overlap
++
+extend / repair only tail.
+
+То есть C4 становится:
+
+PERSISTENT INCREMENTAL TRACKER.
+
+==================================================
+1. ВТОРАЯ ГЛАВНАЯ ЦЕЛЬ
+==================================================
+
+Убрать generic SciPy optimizer
+из hot path candidate fitting.
+
+Сейчас каждая маленькая 2D optimization
+идёт через:
+
+Python
+→ scipy.optimize.least_squares
+→ native residual
+→ Python
+→ native Jacobian
+→ Python
+→ ...
+
+Это слишком дорогая architecture.
+
+Нужно:
+
+один native C++ batch
+
+для candidate fitting.
+
+==================================================
+2. ЭТО РАЗРЕШЁННОЕ ALGORITHMIC CHANGE
+==================================================
+
+В этом этапе больше НЕ требуется:
+
+bitwise equality
+с SciPy TRF.
+
+Вместо этого используется:
+
+QUALITY EQUIVALENCE.
+
+Старый pipeline остаётся:
+
+REFERENCE / FALLBACK.
+
+Новый C4 V2 можно принять,
+если downstream quality
+проходит заранее заданные gates.
+
+==================================================
+3. НЕ МЕНЯТЬ ФИЗИЧЕСКУЮ ПОСТАНОВКУ
+==================================================
+
+Несмотря на разрешение нового solver,
+НЕ менять:
+
+contact-rail template
+
+geometry priors
+
+C4 observation model
+
+allowed history
+
+causality
+
+candidate geometry meaning
+
+contact-rail side logic
+
+running-rail STEP6 model
+
+STEP1
+
+STEP2
+
+C4_SMOOTH
+
+RAW seed adapter
+
+STEP6.
+
+Меняем только:
+
+C4 state persistence
+
+amount of recomputation
+
+candidate optimizer implementation
+
+execution architecture.
+
+==================================================
+4. НОВАЯ ПАПКА
+==================================================
+
+Создать:
+
+MVP/c4_v2/
+
+и:
+
+results_c4_v2/
+
+Не изменять:
+
+MVP/stages/*
+
+MVP/final_pipeline/*
+
+MVP/performance_final*
+
+Все прежние варианты:
+read-only reference.
+
+==================================================
+5. ДВА BACKEND
+==================================================
+
+Сохранить:
+
+C4_BACKEND=reference
+
+текущий frozen/native_batch_spatial C4.
+
+Добавить:
+
+C4_BACKEND=v2
+
+новый persistent native tracker.
+
+==================================================
+6. FALLBACK
+==================================================
+
+C4 V2 должен уметь вызвать
+reference full C4,
+если persistent state:
+
+- отсутствует;
+- invalid;
+- потерян после pose gap;
+- overlap validation failed;
+- явно противоречит текущим observations.
+
+Не придумывать geometry.
+
+==================================================
+7. PERSISTENT MAP STATE
+==================================================
+
+Создать:
+
+C4PersistentState.
+
+Хранить geometry
+в MAP / registered coordinates.
+
+Минимум:
+
+polyline / curve reference
+
+confirmed C4 anchors
+
+stations
+
+tangents
+
+local frames
+
+confidence / status
+
+observation provenance
+
+last successful source pose
+
+last source timestamp
+
+last sensor station on curve
+
+tail station
+
+current useful horizon.
+
+==================================================
+8. STATIC WORLD PRINCIPLE
+==================================================
+
+Track / contact rail static.
+
+Если поезд переместился на Δs,
+известная ранее карта
+не должна вычисляться заново.
+
+Старый segment:
+
+[0, H]
+
+после движения Δs
+становится примерно:
+
+[-Δs, H-Δs]
+
+в current sensor coordinates.
+
+В MAP coordinates
+он вообще не меняется.
+
+==================================================
+9. FIRST FRAME
+==================================================
+
+Если persistent state отсутствует:
+
+использовать старую цепочку:
+
+STEP1
+→ STEP2
+→ full C4
+
+для первого bootstrap.
+
+После этого
+конвертировать output
+в C4PersistentState.
+
+==================================================
+10. NORMAL NEXT FRAME
+==================================================
+
+Если state существует:
+
+НЕ запускать full C4 from zero.
+
+Нужно:
+
+1. определить current pose;
+2. определить положение sensor
+   относительно stored curve;
+3. убрать geometry далеко позади
+   только из active working window;
+4. сохранить впереди уже известную geometry;
+5. проверить overlap;
+6. repair только небольшой tail window;
+7. extend only missing horizon.
+
+==================================================
+11. EXAMPLE
+==================================================
+
+Previous:
+
+sensor T
+trajectory ahead = 52m.
+
+Train moved:
+
+1.4m.
+
+Current already known horizon:
+
+~50.6m.
+
+Нет смысла
+снова строить 50m.
+
+Для восстановления horizon 52m
+нужно добавить примерно:
+
+1.4m
+
+плюс небольшой repair overlap.
+
+==================================================
+12. REPAIR WINDOW
+==================================================
+
+Проверить development variants:
+
+4m
+6m
+8m
+12m.
+
+Это НЕ range search tuning
+старого detector.
+
+Это размер участка persistent trajectory,
+который разрешено локально пересчитать
+для бесшовного соединения.
+
+==================================================
+13. PREFIX FREEZE
+==================================================
+
+Geometry до:
+
+old_tail - repair_window
+
+не пересчитывать.
+
+Считать её frozen map geometry.
+
+Это главный источник speedup.
+
+==================================================
+14. TAIL REPAIR
+==================================================
+
+Последние W метров
+можно пересчитать
+с использованием:
+
+same C4 observations
+same allowed history
+same template
+same scoring.
+
+Нужна continuity
+с frozen prefix.
+
+==================================================
+15. EXTENSION
+==================================================
+
+После repaired tail
+продлить C4 вперёд,
+используя обычную causal evidence.
+
+Stopping reasons
+сохранять.
+
+Если новых points нет:
+
+не выдумывать extension.
+
+==================================================
+16. TARGET HORIZON
+==================================================
+
+Не вводить искусственный 100m extrapolation.
+
+Target extension:
+
+пытаться восстановить
+тот useful horizon,
+который был доступен,
+плюс компенсировать движение поезда.
+
+Если observations позволяют —
+C4 может естественно идти дальше.
+
+==================================================
+17. STATION MAPPING
+==================================================
+
+Для current sensor pose
+найти его station
+на persistent trajectory.
+
+Использовать local projection
+на ближайший segment
+с directional consistency.
+
+Не jump
+на соседний похожий segment.
+
+==================================================
+18. MAP→CURRENT
+==================================================
+
+Для downstream:
+
+stored map geometry
+трансформировать
+в current sensor frame.
+
+Это дешёвая операция.
+
+==================================================
+19. OVERLAP VALIDATION
+==================================================
+
+Перед reuse
+нужно проверить,
+что stored contact rail
+по-прежнему поддерживается
+новыми causal observations.
+
+Но НЕ refit весь horizon.
+
+==================================================
+20. OVERLAP WINDOWS
+==================================================
+
+Проверить:
+
+4m
+8m
+12m
+
+в районе
+текущей видимой части
+stored CR.
+
+==================================================
+21. VALIDATION METRICS
+==================================================
+
+Использовать существующие
+C4 measurement semantics.
+
+Например:
+
+point-to-template residual
+
+coverage
+
+shape
+
+source agreement
+
+distance to expected CR.
+
+Не создавать новый neural detector.
+
+==================================================
+22. VALIDATION OUTCOME
+==================================================
+
+PASS:
+
+reuse prefix.
+
+SOFT_DISAGREEMENT:
+
+repair larger local region.
+
+HARD_DISAGREEMENT:
+
+fallback to reference full C4.
+
+==================================================
+23. FALLBACK RATE
+==================================================
+
+Обязательно измерить:
+
+what % incremental updates
+require full fallback.
+
+Если >20–30%,
+persistent design не даёт
+ожидаемого выигрыша.
+
+==================================================
+24. GAP RESET
+==================================================
+
+Pose/time registration gap:
+
+persistent state invalidated
+по существующей semantics.
+
+Не переносить geometry
+через неизвестный transform.
+
+==================================================
+25. TRACKING STATUS
+==================================================
+
+Статусы:
+
+COLD_FULL_BOOTSTRAP
+
+INCREMENTAL_REUSE
+
+INCREMENTAL_REPAIR
+
+INCREMENTAL_EXTEND
+
+INCREMENTAL_REPAIR_EXTEND
+
+FALLBACK_FULL
+
+UPDATE_FAILED_REUSE_PREVIOUS
+
+STATE_RESET_POSE_GAP.
+
+==================================================
+26. НЕ ЗАПУСКАТЬ STEP1/STEP2 НОРМАЛЬНО КАЖДЫЙ UPDATE
+==================================================
+
+Очень важно.
+
+Если persistent C4 state valid
+и overlap validation PASS:
+
+НЕ нужен новый STEP1/STEP2 bootstrap.
+
+Их использовать:
+
+cold start
+
+recovery
+
+fallback.
+
+Это тоже часть speedup.
+
+==================================================
+27. PERIODIC REBOOTSTRAP НЕ ВВОДИТЬ АВТОМАТИЧЕСКИ
+==================================================
+
+Не делать:
+
+"каждые N кадров full bootstrap"
+
+без evidence.
+
+Persistent tracker должен жить,
+пока current observations
+его подтверждают.
+
+==================================================
+28. QUALITY REFERENCE
+==================================================
+
+Сравнить C4 V2 с:
+
+DEPLOYABLE_PIPELINE
+из REPORT_FINAL_PIPELINE
+
+и текущим final C4.
+
+Не с GT-seed research pipeline
+как production baseline.
+
+==================================================
+29. QUALITY GATES — ЗАФИКСИРОВАТЬ ДО BENCHMARK
+==================================================
+
+Новый C4 V2 принимается,
+если на matched benchmark:
+
+far rail pooled p95 degradation
+не хуже более чем:
+
++1.0 cm
+
+в каждом:
+
+30–50m
+50–75m
+75–100m.
+
+==================================================
+30. CATASTROPHIC GATE
+==================================================
+
+Дополнительных starts
+с >20cm:
+
+не более +1
+на текущем benchmark cohort.
+
+>50cm:
+
+0 дополнительных.
+
+Wrong-side:
+
+0.
+
+==================================================
+31. HORIZON GATE
+==================================================
+
+Median / p90 C4 horizon
+не должен заметно ухудшаться.
+
+Допустимая потеря:
+
+не более 2 percentage points
+в coverage thresholds:
+
+>=30m
+>=50m
+>=75m.
+
+==================================================
+32. AVAILABILITY GATE
+==================================================
+
+После first successful bootstrap:
+
+persistent geometry state availability
+не хуже current stateful pipeline.
+
+==================================================
+33. IMPORTANT:
+НЕ ТРЕБУЕМ SCIpy PARAMETER EQUALITY
+==================================================
+
+Новый fit может дать
+немного другие params.
+
+Оценивать:
+
+physical CR result
+
+running rails
+
+horizon
+
+failures
+
+а не:
+
+float equality with SciPy.
+
+==================================================
+34. PART B:
+FULL NATIVE CANDIDATE SOLVER
+==================================================
+
+Текущая fit-проблема
+имеет всего ~2 optimized parameters.
+
+Generic SciPy TRF
+слишком тяжёлый для тысяч
+таких маленьких задач.
+
+Реализовать:
+
+C++17 candidate solver.
+
+==================================================
+35. НИКАКОГО SCIPY В НОВОМ HOT PATH
+==================================================
+
+Для:
+
+C4_BACKEND=v2
+
+candidate fit
+не должен вызывать:
+
+scipy.optimize.least_squares.
+
+Вообще.
+
+==================================================
+36. ONE NATIVE API
+==================================================
+
+Основной API примерно:
+
+c4_native.extend_track(
+    persistent_state,
+    history_frames,
+    poses,
+    config
+)
+
+Один Python→C++ вызов
+на incremental geometry update
+желателен.
+
+==================================================
+37. ВНУТРИ C++
+==================================================
+
+Native core должен выполнять:
+
+ROI candidate extraction
+или получать compact prepared ROI
+
+candidate construction
+
+template alignment
+
+NN distances
+
+residual
+
+robust objective
+
+Jacobian / derivative
+
+local optimization
+
+candidate score
+
+candidate ordering output
+
+marching tail loop
+
+extension loop.
+
+==================================================
+38. PYTHON ROLE
+==================================================
+
+Python остаётся:
+
+LAS I/O
+
+pipeline orchestration
+
+pose/state management
+
+STEP1/STEP2 fallback
+
+C4_SMOOTH
+
+STEP6
+
+reporting.
+
+C4 hot loop:
+native.
+
+==================================================
+39. SOLVER CANDIDATE A:
+TINY LEVENBERG-MARQUARDT
+==================================================
+
+Реализовать
+маленький box-constrained
+damped LM / GN solver
+специально для реального
+parameter dimension C4.
+
+Использовать:
+
+same residual semantics
+
+same robust Cauchy objective
+
+same bounds
+
+same initialization.
+
+==================================================
+40. FINITE DIFFERENCES
+==================================================
+
+Первая версия:
+
+native finite differences.
+
+Они уже показали
+очень маленькую стоимость
+в предыдущем sprint.
+
+Не начинать
+с analytic Jacobian.
+
+==================================================
+41. SOLVER LOOP
+==================================================
+
+Native:
+
+evaluate residual
+
+FD Jacobian
+
+compute 2×2 normal system
+
+damping
+
+candidate step
+
+box projection
+
+objective check
+
+accept/reject step
+
+adaptive damping.
+
+==================================================
+42. SMALL MATRIX
+==================================================
+
+Поскольку parameter dimension
+очень маленький:
+
+не использовать
+общий heavy linear algebra solver.
+
+Для 2×2
+явное решение
+или tiny fixed-size math.
+
+==================================================
+43. SOLVER TERMINATION
+==================================================
+
+Выбрать reasonable criteria
+на development:
+
+parameter step
+
+objective improvement
+
+gradient.
+
+Не пытаться копировать
+SciPy termination bit-for-bit.
+
+==================================================
+44. HARD MAX
+==================================================
+
+Проверить:
+
+max iterations:
+
+4
+6
+8
+12.
+
+Но выбирать
+по development speed+quality,
+не benchmark.
+
+==================================================
+45. SOLVER CANDIDATE B:
+COARSE-TO-LOCAL
+==================================================
+
+Поскольку dimension = 2,
+проверить альтернативу:
+
+small coarse grid
+around initialization
+
+→ best K cells
+
+→ tiny LM refinement.
+
+==================================================
+46. GRID SIZE
+==================================================
+
+Development only:
+
+5×5
+7×7
+9×9.
+
+Не делать огромную сетку.
+
+==================================================
+47. WHY GRID
+==================================================
+
+Для 2D optimization
+десятки SIMD objective evaluations
+могут быть дешевле
+generic trust-region orchestration.
+
+==================================================
+48. SOLVER SELECTION
+==================================================
+
+Выбрать:
+
+NATIVE_LM
+
+или
+
+GRID_LM
+
+только на development.
+
+После выбора freeze.
+
+==================================================
+49. NO CERES
+==================================================
+
+Если custom tiny solver работает:
+
+Ceres не нужен.
+
+Не тратить время
+на ещё одну generic dependency.
+
+==================================================
+50. FULL NATIVE RESIDUAL
+==================================================
+
+Использовать уже реализованный
+native residual/NN код.
+
+Не возвращаться
+к Python residual.
+
+==================================================
+51. EXACT / SMALL-N NN
+==================================================
+
+Для small sets:
+native brute-force exact NN.
+
+Для large sets:
+reuse existing exact
+spatial broad-phase.
+
+No approximate nearest neighbors.
+
+==================================================
+52. PERSISTENT SPATIAL DATA
+==================================================
+
+Map-space observations/history
+по возможности хранить
+в persistent native structures.
+
+Не перестраивать
+одинаковые static trees
+в каждом candidate.
+
+==================================================
+53. THREADING — ТЕПЕРЬ ИМЕЕТ СМЫСЛ
+==================================================
+
+После устранения SciPy/Python
+проверить candidate-level parallelism.
+
+==================================================
+54. PERSISTENT NATIVE THREAD POOL
+==================================================
+
+Pool создаётся один раз
+на tracker lifetime.
+
+Не на каждый march step.
+
+==================================================
+55. THREAD COUNTS
+==================================================
+
+Benchmark:
+
+1
+2
+4
+8
+16.
+
+==================================================
+56. PARALLEL UNIT
+==================================================
+
+Параллелить
+independent candidate fits
+одного marching step.
+
+Не parallelize
+dependent sequential march steps.
+
+==================================================
+57. NO GIL
+==================================================
+
+На время native update:
+
+release GIL.
+
+==================================================
+58. DETERMINISTIC COLLECTION
+==================================================
+
+Каждый candidate
+пишет в заранее
+назначенный output slot.
+
+После join:
+
+оригинальная scoring/order logic.
+
+==================================================
+59. PARALLEL QUALITY
+==================================================
+
+Thread count
+не должен менять result.
+
+Для native solver
+требуется deterministic candidate result
+при одинаковом input.
+
+==================================================
+60. SIMD
+==================================================
+
+-O3
+
+без fast-math.
+
+Проверить auto-vectorization
+distance/residual loops.
+
+==================================================
+61. OPTIONAL -march=native
+==================================================
+
+Только diagnostic.
+
+Production Docker
+сначала portable.
+
+==================================================
+62. NO PYTHON DICTS IN HOT LOOP
+==================================================
+
+Candidate records
+в C++ structs.
+
+Не создавать
+тысячи Python objects
+в marching loop.
+
+==================================================
+63. NO PYBIND PER RESIDUAL
+==================================================
+
+Главный hard requirement.
+
+Для C4 V2
+НЕ должно быть:
+
+60 000 Python→native residual calls.
+
+Цель:
+
+~1 native call
+per geometry update
+
+или,
+если технически невозможно:
+
+O(number_of_march_steps),
+
+но НЕ
+O(number_of_residual_evaluations).
+
+==================================================
+64. CALL COUNTERS
+==================================================
+
+Report:
+
+Python→native calls/update
+
+candidate fits/update
+
+residual evaluations/update
+
+native thread tasks/update.
+
+==================================================
+65. INCREMENTAL WORK METRIC
+==================================================
+
+Для каждого update:
+
+old known horizon
+
+vehicle displacement
+
+repair length
+
+extension length
+
+total meters recomputed.
+
+==================================================
+66. MAIN EXPECTED SPEEDUP
+==================================================
+
+Сравнить:
+
+FULL_WORK_METERS
+
+vs
+
+INCREMENTAL_RECOMPUTED_METERS.
+
+Это главный structural speedup.
+
+==================================================
+67. EXAMPLE METRIC
+==================================================
+
+Если old horizon:
+
+52m
+
+displacement:
+
+1.3m
+
+repair:
+
+6m
+
+extension:
+
+1.3m
+
+work:
+
+~7.3m
+
+vs
+
+~52m full.
+
+Structural work reduction:
+
+~7×.
+
+==================================================
+68. НЕ ОБЕЩАТЬ LINEAR SPEEDUP
+==================================================
+
+Но измерить
+correlation:
+
+meters recomputed
+vs
+runtime.
+
+==================================================
+69. DEVELOPMENT SET
+==================================================
+
+Использовать полные
+continuous runs.
+
+Не только независимые starts.
+
+Нужна persistence.
+
+Минимум:
+
+roundT_squareT_pressureGate_squareT
+
+roundT_pressureGate_roundT
+
+squareT_platform_squareT_switch
+
+new_data_part_01a2
+
+new_data_part_01d1.
+
+==================================================
+70. RUN FROM BEGINNING
+==================================================
+
+Persistent tracker
+должен проходить run
+хронологически.
+
+Нельзя
+создавать hidden state
+из будущих кадров.
+
+==================================================
+71. DEVELOPMENT PHASE
+==================================================
+
+На development выбрать:
+
+repair window
+
+native solver variant
+
+iteration cap
+
+thread count.
+
+==================================================
+72. BENCHMARK FREEZE
+==================================================
+
+После development:
+
+freeze ONE configuration.
+
+Только затем:
+
+benchmark.
+
+После benchmark:
+
+никаких tuning.
+
+==================================================
+73. PERFORMANCE TARGET
+==================================================
+
+Главный target:
+
+NORMAL INCREMENTAL UPDATE
+
+median:
+
+<100 ms.
+
+GOOD:
+
+<150ms.
+
+ACCEPTABLE:
+
+<250ms.
+
+==================================================
+74. FULL COLD TARGET
+==================================================
+
+Cold full C4
+может оставаться тяжелее.
+
+Желательно:
+
+<500ms.
+
+Но cold/fallback
+не выполняется каждый frame.
+
+==================================================
+75. SYSTEM TARGET
+==================================================
+
+На 10Hz raw input:
+
+raw consumer:
+<100ms p95
+
+geometry incremental worker:
+не должен создавать
+растущий backlog.
+
+==================================================
+76. NO BACKLOG DESIGN
+==================================================
+
+Сохранить latest-value worker:
+
+1 active
+
+1 newest pending.
+
+Но если incremental update
+становится <100–200ms,
+publish rate должна резко вырасти.
+
+==================================================
+77. PUBLISHED GEOMETRY AGE
+==================================================
+
+Measure:
+
+age seconds
+
+age distance
+
+remaining horizon.
+
+==================================================
+78. HORIZON TARGET
+==================================================
+
+На moving runs
+особенно проверить:
+
+positive remaining horizon
+на raw frames.
+
+Текущая async architecture
+теряет horizon,
+потому что full solve завершается
+слишком поздно.
+
+V2 должен это исправить.
+
+==================================================
+79. CRITICAL METRIC
+==================================================
+
+POSITIVE_HORIZON_FRACTION
+
+для каждого full run.
+
+Сравнить:
+
+old async batch
+
+vs
+
+C4 V2.
+
+==================================================
+80. TARGET POSITIVE HORIZON
+==================================================
+
+Не hard acceptance,
+но цель:
+
+>90%
+
+на runs,
+где observations физически позволяют.
+
+Если C4 реально выдаёт только 8m,
+algorithm cannot invent more.
+
+Такие cases отдельно.
+
+==================================================
+81. SEPARATE NO_POINTS
+==================================================
+
+Если frozen observation
+физически даёт только short horizon:
+
+не считать это
+performance failure.
+
+Отдельно:
+
+COMPUTE_EXPIRED
+
+vs
+
+OBSERVATION_SHORT_HORIZON.
+
+==================================================
+82. FALLBACK FULL SOLVE
+==================================================
+
+Fallback может использовать:
+
+reference C4
+
+или
+
+new native full solver.
+
+На development сравнить.
+
+Если native full quality проходит,
+использовать native full.
+
+Иначе fallback:
+reference.
+
+==================================================
+83. NATIVE FULL MODE
+==================================================
+
+Даже cold mode
+может использовать тот же native solver.
+
+Отдельно измерить:
+
+FULL_NATIVE_FROM_SCRATCH.
+
+==================================================
+84. QUALITY COMPARISON
+==================================================
+
+Для V2 на development/benchmark:
+
+CR errors
+
+far rail errors
+
+near rail
+
+center
+
+30–50
+50–75
+75–100.
+
+==================================================
+85. MATCHED SUPPORT
+==================================================
+
+Всегда compare
+на одинаковых GT planes.
+
+Не смешивать coverage.
+
+==================================================
+86. C4 HORIZON QUALITY
+==================================================
+
+Report:
+
+median
+
+p90
+
+p95
+
+max
+
+P>=30
+P>=50
+P>=75
+P>=100.
+
+==================================================
+87. WRONG-SIDE
+==================================================
+
+Count:
+
+wrong-side contact rail
+
+track swap
+
+crossing rail.
+
+Target:
+
+0 new.
+
+==================================================
+88. SEAM QUALITY
+==================================================
+
+На границе frozen prefix
+и repaired tail:
+
+position discontinuity
+
+tangent discontinuity
+
+curvature discontinuity.
+
+==================================================
+89. SEAM GATES
+==================================================
+
+Не должно появляться
+видимого kink.
+
+Report p95:
+
+position seam cm
+
+heading seam degrees.
+
+==================================================
+90. DRIFT OVER TIME
+==================================================
+
+Persistent tracker
+может накопить drift.
+
+Обязательно:
+
+error vs
+frames since cold bootstrap
+
+и
+
+meters since cold bootstrap.
+
+==================================================
+91. LONG-RUN RESET
+==================================================
+
+Если drift растёт:
+
+не вводить arbitrary reset сразу.
+
+Сначала определить
+overlap-validation signal.
+
+Fallback full
+должен reset state
+при доказанном disagreement.
+
+==================================================
+92. RECOVERY TEST
+==================================================
+
+Artificially corrupt
+persistent tail:
+
+1cm
+3cm
+5cm
+10cm.
+
+Проверить:
+
+overlap validation
+
+repair
+
+fallback.
+
+==================================================
+93. POSE NOISE
+==================================================
+
+Не вводить synthetic huge study.
+
+Но проверить existing
+registration disagreement cases
+из старых failures.
+
+==================================================
+94. NATIVE SOLVER QUALITY STUDY
+==================================================
+
+Отдельно сравнить
+на captured old SciPy fits:
+
+objective difference
+
+parameter difference
+
+candidate selection.
+
+Но candidate selection
+важнее parameter equality.
+
+==================================================
+95. FIT ACCEPTANCE
+==================================================
+
+Для каждого fit:
+
+same candidate selected?
+
+same candidate rejected?
+
+objective comparable?
+
+Если solver params отличаются,
+но same downstream decision —
+это нормально.
+
+==================================================
+96. SOLVER SPEED
+==================================================
+
+Report:
+
+µs/fit
+
+fits/update
+
+candidate batch ms
+
+native thread utilization.
+
+==================================================
+97. CPU UTILIZATION
+==================================================
+
+Measure process CPU utilization.
+
+На 16-core CPU
+во время candidate batches
+должна быть реальная
+multi-core загрузка.
+
+Report approximate:
+
+average active cores
+или process CPU%.
+
+==================================================
+98. THREAD SCALING
+==================================================
+
+Для native batch:
+
+1
+2
+4
+8
+16.
+
+Report:
+
+wall speedup
+
+parallel efficiency.
+
+==================================================
+99. IF 16 THREADS STILL DO NOT SCALE
+==================================================
+
+Тогда объяснить:
+
+candidate count
+
+fit duration
+
+sequential fraction
+
+memory contention
+
+load imbalance.
+
+Не писать просто
+"threads don't help".
+
+==================================================
+100. AVOID OVERSUBSCRIPTION
+==================================================
+
+Native workers N.
+
+BLAS/OMP/MKL:
+
+1.
+
+==================================================
+101. DOCKER
+==================================================
+
+Собрать:
+
+c4-v2 portable runtime.
+
+Multi-stage.
+
+C++17.
+
+No build tools
+в runtime.
+
+==================================================
+102. NATIVE DEFAULT
+==================================================
+
+Если C4 V2
+проходит quality gates:
+
+production default:
+
+C4_BACKEND=v2.
+
+Reference:
+
+C4_BACKEND=reference.
+
+==================================================
+103. FAST FALLBACK SWITCH
+==================================================
+
+CLI:
+
+--c4-backend v2
+
+--c4-backend reference.
+
+==================================================
+104. NO SILENT FALLBACK
+==================================================
+
+Если native module
+не загрузился:
+
+explicit startup error.
+
+Не молча менять backend.
+
+==================================================
+105. REPORT STRUCTURE
+==================================================
+
+Создать:
+
+REPORT_C4_V2_FINAL.md
+REPORT_C4_V2_FINAL.html
+
+==================================================
+106. REPORT FIRST PAGE
+==================================================
+
+REFERENCE:
+
+cold full median:
+...
+
+normal full update:
+...
+
+C4:
+...
+
+V2:
+
+cold full median:
+...
+
+incremental median:
+...
+
+incremental p95:
+...
+
+repair-only:
+...
+
+repair+extend:
+...
+
+fallback rate:
+...
+
+thread count:
+...
+
+average CPU cores used:
+...
+
+==================================================
+107. SPEEDUP NUMBERS
+==================================================
+
+Report:
+
+cold speedup
+
+incremental speedup
+vs old full solve
+
+amortized speedup/run
+
+raw frame CPU reduction.
+
+==================================================
+108. QUALITY FIRST PAGE
+==================================================
+
+far p95:
+
+30–50
+reference / V2 / Δ
+
+50–75
+reference / V2 / Δ
+
+75–100
+reference / V2 / Δ.
+
+==================================================
+109. FAILURE COUNTS
+==================================================
+
+>10cm
+
+>20cm
+
+>50cm
+
+wrong-side
+
+fallbacks
+
+state resets.
+
+==================================================
+110. HORIZON FIRST PAGE
+==================================================
+
+For full runs:
+
+positive horizon %
+
+median remaining horizon
+
+p05 remaining horizon
+
+geometry age p95.
+
+==================================================
+111. WHY SPEEDUP HAPPENED
+==================================================
+
+Обязательный раздел:
+
+WORK REDUCTION.
+
+Написать:
+
+old average recomputed meters/update
+
+new average recomputed meters/update.
+
+==================================================
+112. CPU BREAKDOWN
+==================================================
+
+Before:
+
+Python/SciPy
+
+candidate fit
+
+NN
+
+marching
+
+scoring.
+
+After:
+
+native candidate solver
+
+tail repair
+
+tail extension
+
+validation
+
+Python orchestration.
+
+==================================================
+113. WHY NOT FASTER
+==================================================
+
+Если target <100ms
+не достигнут:
+
+дать quantified reason.
+
+Например:
+
+repair region 12m = X ms
+
+extension = Y
+
+candidate fitting = Z
+
+sequential marching = ...
+
+==================================================
+114. DO NOT RETURN TO OLD MICROOPTIMIZATIONS
+==================================================
+
+Не повторять:
+
+grid audit
+SoA audit
+small allocation tweaks
+content hash experiments
+
+если только
+новый native architecture
+не показывает конкретный
+новый hotspot.
+
+==================================================
+115. PERFORMANCE STOP
+==================================================
+
+Если:
+
+incremental median <150ms
+AND
+quality gate PASS
+AND
+positive horizon materially improved
+
+STOP.
+
+Этого достаточно для сдачи.
+
+==================================================
+116. STRETCH
+==================================================
+
+Если <150ms получилось быстро:
+
+попробовать:
+
+thread scaling
+repair window optimization
+
+только development.
+
+Но не рисковать quality.
+
+==================================================
+117. IF QUALITY FAILS
+==================================================
+
+Сначала определить:
+
+native solver error
+
+или
+
+persistent reuse error.
+
+Проверить независимо.
+
+==================================================
+118. SOLVER-ONLY CONTROL
+==================================================
+
+Run full from-scratch C4
+with new native solver
+but no persistence.
+
+Если quality fails:
+
+problem solver.
+
+==================================================
+119. PERSISTENCE-ONLY CONTROL
+==================================================
+
+Run persistent tracker
+using old SciPy fit.
+
+Если quality fails:
+
+problem persistence.
+
+==================================================
+120. COMBINED
+==================================================
+
+Только если оба individually acceptable:
+
+native solver
++
+persistent tracker.
+
+==================================================
+121. FINAL DECISION MATRIX
+==================================================
+
+A.
+Persistent alone solves speed.
+
+B.
+Native solver alone helps,
+persistent needed for target.
+
+C.
+Persistent + native solver
+achieves production target.
+
+D.
+Quality loss unacceptable;
+reference retained.
+
+==================================================
+122. REQUIRED CSV
+==================================================
+
+results_c4_v2/
+
+development_quality.csv
+
+benchmark_quality.csv
+
+incremental_timing.csv
+
+full_timing.csv
+
+repair_timing.csv
+
+extension_timing.csv
+
+native_solver.csv
+
+thread_scaling.csv
+
+persistent_state_stats.csv
+
+fallbacks.csv
+
+seam_metrics.csv
+
+drift_metrics.csv
+
+horizon_metrics.csv
+
+cpu_utilization.csv
+
+quality_gate.json
+
+performance_gate.json
+
+FINAL_C4_V2_RECOMMENDATION.md
+
+MANIFEST.json.
+
+==================================================
+123. GALLERY
+==================================================
+
+Для representative cases:
+
+straight
+
+curve
+
+S-like
+
+grade
+
+short horizon
+
+long horizon
+
+fallback
+
+worst V2 regression.
+
+Показать:
+
+previous stored map geometry
+
+frozen prefix
+
+repair region
+
+new extension
+
+final CR
+
+final running rails
+
+GT evaluation only.
+
+==================================================
+124. COLOR SEGMENTS
+==================================================
+
+Visualization:
+
+BLUE:
+reused frozen persistent prefix
+
+ORANGE:
+repaired tail
+
+GREEN:
+newly extended segment
+
+RED:
+fallback/full reset.
+
+==================================================
+125. IMPORTANT:
+NO FAKE SPEEDUP
+==================================================
+
+Не считать:
+
+reused 50m geometry
+как "0ms C4"
+без стоимости validation/transform.
+
+Measure full incremental update.
+
+==================================================
+126. IMPORTANT:
+NO FUTURE LEAK
+==================================================
+
+Persistent state
+только из прошлых
+successful inference.
+
+Current update:
+
+current + allowed history.
+
+No future cloud.
+
+==================================================
+127. IMPORTANT:
+THIS IS THE LAST PERFORMANCE BRANCH
+==================================================
+
+Не создавать C4 V3.
+
+Нужно довести
+эту архитектуру до решения.
+
+Если она проходит gates —
+freeze.
+
+Если нет —
+дать точную quantified причину.
+
+==================================================
+128. FINAL FREEZE
+==================================================
+
+Если PASS:
+
+создать:
+
+MVP/c4_v2/FINAL_C4_V2.freeze
+
+с:
+
+code hashes
+config
+solver
+repair window
+thread count
+Docker image
+quality metrics
+performance metrics.
+
+==================================================
+129. FINAL PIPELINE UPDATE
+==================================================
+
+Если V2 PASS:
+
+MVP/final_pipeline
+не переписывать автоматически.
+
+Создать integration adapter:
+
+final_pipeline_v2
+
+или config:
+
+C4_BACKEND=v2.
+
+Reference backend оставить.
+
+==================================================
+130. ФИНАЛЬНЫЙ ВОПРОС
+==================================================
+
+Мы больше не пытаемся ответить:
+
+"Как ускорить старый SciPy implementation?"
+
+Нужно ответить:
+
+"Как выполнять только ту работу,
+которая реально новая между соседними кадрами,
+и считать эту работу полностью native
+на всех доступных ядрах?"
+
+Именно это является задачей этапа.

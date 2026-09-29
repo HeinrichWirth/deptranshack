@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Rail Inspector · контроль габарита</title>
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <header>
+      <a class="brand" href="/"
+        >▥ <span>RAIL<span class="light"> INSPECTOR</span></span></a
+      ><span class="tag">Контроль габарита</span
+      ><span id="connection" class="connection">Локальный запуск · Docker</span>
+    </header>
+    <main>
+      <aside>
+        <div class="eyebrow">ЗАПИСЬ ПОЕЗДКИ</div>
+        <h1>От облака<br />к препятствию.</h1>
+        <p class="muted">
+          Загрузите ROS 2 bag. Расчёт, срез и найденные объекты появятся здесь.
+        </p>
+        <label id="drop" class="drop" for="file"
+          ><span class="upload-icon">↑</span><strong>Выберите .db3</strong
+          ><span>или перетащите файл сюда</span
+          ><input id="file" type="file" accept=".db3"
+        /></label>
+        <progress id="uploadProgress" max="100" value="0" hidden></progress>
+        <label class="field"
+          >Сохранённые прогоны<select id="jobs">
+            <option value="">Выберите запись</option>
+          </select></label
+        >
+        <label class="field">Облако точек<select id="topic"></select></label
+        ><button id="start" class="primary" disabled>Начать расчёт</button>
+        <div id="state" role="status" class="state">Готов к загрузке</div>
+        <p id="error" class="error" role="alert"></p>
+        <div class="facts">
+          <div><span>Габарит</span><b>2,1 × 3 м</b></div>
+          <div><span>Подтверждение</span><b>≥ 2 пакетов</b></div>
+        </div>
+        <p class="small muted">
+          Облака поступают с частотой записи. Полный расчёт запрашивается 3 раза
+          в секунду. За пределами принятого пути — неизвестная область.
+        </p>
+        <a id="log" href="#" target="_blank">Журнал расчёта ↗</a>
+      </aside>
+      <section class="workspace">
+        <div class="heading">
+          <div>
+            <div class="eyebrow">НАБЛЮДЕНИЕ</div>
+            <h2>Поперечный срез</h2>
+          </div>
+          <label class="toggle"
+            ><input id="follow" type="checkbox" checked /> Следить за
+            поездом</label
+          >
+        </div>
+        <div class="metrics">
+          <div><span>Исходный кадр</span><strong id="source">—</strong></div>
+          <div>
+            <span>Расчёт алгоритма</span><strong id="compute">—</strong>
+          </div>
+          <div>
+            <span>Расчётов готово</span><strong id="processed">0</strong>
+          </div>
+        </div>
+        <div class="canvas-wrap">
+          <canvas id="slice"></canvas>
+          <div id="empty">Здесь появится облако и прогноз рельсов</div>
+          <div class="legend">
+            <span class="gray">● облако</span
+            ><span class="green">● ходовые рельсы</span
+            ><span class="yellow">● контактный</span
+            ><span class="red">● внутри габарита</span>
+          </div>
+        </div>
+        <div class="controls">
+          <button id="back" title="Назад на метр">−1 м</button
+          ><label
+            >Срез в <b id="distanceLabel">8</b> м
+            <input
+              id="distance"
+              type="range"
+              min="0"
+              max="100"
+              step="0.5"
+              value="8" /></label
+          ><button id="forward">+1 м</button
+          ><span id="sliceNote">Ожидание результата</span>
+        </div>
+        <div class="timeline">
+          <button id="prevFrame">← Кадр</button
+          ><input id="timeline" type="range" min="0" max="0" value="0" /><button
+            id="nextFrame"
+          >
+            Кадр →</button
+          ><button id="inspect" disabled>Проехать по прогнозу ↗</button>
+        </div>
+        <div id="progressText" class="small muted"></div>
+        <div class="heading objects-heading">
+          <div>
+            <div class="eyebrow">РЕЗУЛЬТАТ</div>
+            <h2>Объекты <span id="objectCount" class="count">0</span></h2>
+          </div>
+          <div class="actions">
+            <label><input id="singles" type="checkbox" /> Одиночные</label
+            ><a id="csv" href="#" download="objects.csv">CSV ↓</a
+            ><a id="json" href="#" download="objects.json">JSON ↓</a>
+          </div>
+        </div>
+        <p class="small muted">
+          Близкие обнаружения автоматически объединены в объекты. Подтверждение
+          — минимум в двух независимых пакетах.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Объект</th>
+                <th>Кадры</th>
+                <th>Ближайшее</th>
+                <th>Ш × В</th>
+                <th>Площадь</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="objects"></tbody>
+          </table>
+        </div>
+        <div id="objectDetail"></div>
+      </section>
+    </main>
+    <footer>
+      Срез показывает сохранённый прогноз текущего кадра. Красные точки —
+      геометрические попадания; таблица содержит подтверждённые группы.
+      Дальность и размеры относятся к видимой части объекта.
+    </footer>
+    <script src="app.js"></script>
+  </body>
+</html>

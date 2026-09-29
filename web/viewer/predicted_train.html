@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Полный прогон · 3 Гц</title><link rel="stylesheet" href="/predicted_train.css"></head>
+<body><header><div><small>RAIL INSPECTOR / ПРОСМОТР РЕЗУЛЬТАТА</small><h1>Проезд по сохранённому прогнозу</h1></div><nav><a href="/">Записи и таблица объектов →</a></nav></header>
+<main><aside><h2>Отказы и перекрытие</h2><div id="failureCases" class="buttons"></div><p class="muted">Ниже доступны выполненные расчёты 3 Гц. Между ними облака только накапливались. Ввод кадра переходит к ближайшему следующему выполненному расчёту.</p><h2>Быстрый переход</h2><div id="cases" class="buttons"></div><p class="muted">Цветной — использованный путь. Белый пунктир — предыдущая форма до коррекции. Жёлтый — сохранённый прогноз контактного рельса.</p>
+ <label>Прогон<select id="run" aria-label="Прогон"></select></label>
+ <label>Исходный кадр (с нуля)<input id="frame" type="number" min="0" value="0" aria-label="Номер Исходный кадр (с нуля)"></label>
+ <div class="buttons"><button id="prevFrame">← Кадр</button><button id="nextFrame">Кадр →</button></div>
+ <input id="frameSeek" type="range" min="0" max="0" value="0" step="1" aria-label="Выбрать исходный кадр">
+ <p id="source" class="muted"></p><a id="download" class="download">Полный отчёт и скорость</a>
+ <hr><label><input id="extend5" type="checkbox" checked> Используется сохранённое продолжение</label><label>Длина продолжения<select id="extensionLength"><option value="5">+5 м</option><option value="20" selected>+20 м</option></select></label><p class="muted">Показана сохранённая геометрия ответа. Пересчёта детектора в просмотрщике нет. Дальняя форма при привязке остаётся предположением.</p><label>Скорость поезда, км/ч<input id="speed" type="number" min="1" max="160" value="30" step="1"></label>
+ <label>Толщина среза, м<input id="width" type="number" min="0.1" step="0.1" value="1"></label>
+ <label>Шаг по пути, м<input id="step" type="number" min="0.1" step="0.1" value="1"></label>
+ <div class="buttons" id="stepPresets"><button data-step="1">1 м</button><button data-step="2">2 м</button><button data-step="4">4 м</button><button data-step="8">8 м</button></div>
+ <p class="muted">Можно ввести любой шаг 1–8 м. Толщина среза задаётся отдельно.</p>
+ <hr><h2>Габарит поезда</h2><p>Ширина <strong>2,1 м</strong><br>Высота от головок <strong>3 м</strong></p>
+ <label><input id="showIntrusions" type="checkbox" checked> Показывать попадания красным</label>
+ <label>Масштаб среза<input id="zoom" type="range" min="10" max="240" value="120" step="1" aria-label="Масштаб среза"></label>
+ <button id="resetView">Сбросить вид</button>
+ <hr><h2>Слои</h2><div id="layers"><label><input type="checkbox" data-layer="4" checked><i style="background:#ff58c7"></i>Выбранный объект</label><label><input type="checkbox" data-layer="30" checked><i style="background:white"></i>Сравнение · белый</label>
+ <label><input type="checkbox" data-layer="0" checked><i style="background:#7d8b9d"></i>Исходное облако</label>
+ <label><input type="checkbox" data-layer="1" checked><i style="background:#48ca8b"></i>Опора STEP1</label>
+ <label><input type="checkbox" data-layer="2" checked><i style="background:#f02db4"></i>Исходный слой 2 (нет в RAW)</label>
+ <label><input type="checkbox" data-layer="21" checked><i style="background:#00c8ff"></i>Пара / опорная плоскость · 1</label>
+ <label><input type="checkbox" data-layer="22" checked><i style="background:#ff7d23"></i>Пара / опорная плоскость · 2</label>
+ <label><input type="checkbox" data-layer="20" checked><i style="background:#ffd22d"></i>Контактный · расчётная линия</label>
+ <label><input type="checkbox" data-layer="23"><i style="background:#9b82dc"></i>Расчётный центр</label>
+ </div><p class="muted">Сохранённый причинный пакет выбранного расчёта остаётся неподвижным. Новых LAS нет. Поезд движется по середине предсказанной пары. Смена кадра возвращает в начало; за концом прогноза движения нет.</p>
+</aside><section class="workspace"><div id="diagnosticNotice" role="status" hidden></div>
+ <div class="title"><h2>Поперечный срез вдоль пути</h2><span id="sliceInfo">—</span></div>
+ <div class="canvasWrap"><canvas id="slice" aria-label="Поперечный 2D-срез"></canvas><span class="canvasHint">Влево / вверх относительно поезда · тянуть — сдвиг · колесо — масштаб</span></div>
+ <section class="transport"><div class="buttons"><button id="back">◀ Шаг</button><button id="play" disabled>▶ Ехать</button><button id="forward">Шаг ▶</button><button id="start">В начало</button><strong id="position">—</strong></div><input id="positionSeek" type="range" min="0" max="0" step="0.01" value="0" aria-label="Позиция поезда на прогнозе"></section>
+ <div id="status" role="status">Загрузка прогонов…</div>
+ <section class="contacts"><h2 id="contactInfo">Точки внутри габарита —</h2><p id="pointInfo">Нажмите на точку среза, чтобы увидеть расстояние от исходного лидара.</p><div id="contactList"></div><p class="muted">Проверяются все реальные точки текущего облака, независимо от видимости слоёв. Красным выделены точки внутри проверяемого габарита. Расчётные линии не считаются попаданиями. Дальность по прямой измеряется от лидара исходного кадра и не меняется при проезде.</p></section>
+ <div class="title"><h2>Путь сверху</h2><span>Нажмите на путь, чтобы переместить поезд</span></div><canvas id="top" aria-label="Вид предсказанного пути сверху"></canvas>
+ <p class="muted">Цветные линии — сохранённый путь, использованный в проверке. При удержании старой плоскости линии условные, это явно указано над срезом. Облако T фиксировано: прошлые и будущие облака при проезде не подгружаются. Срез распрямлён вдоль изгиба пути; высота отсчитывается от плоскости пары головок. Центр виртуального поезда — середина рамки. Красные точки обозначают геометрическое попадание в габарит, а не подтверждённые препятствия.</p>
+</section></main><script src="/predicted_train_math.js"></script><script src="/predicted_train.js"></script></body></html>
+

@@ -1,0 +1,19 @@
+{
+  "config_hash": "b7a9ec57f0be163800cf74e57bf2fb4a0e1785d024caa57ebb0a9593254aea6f",
+  "protocol_hash": "6f33dc0f7b04c4d4f23935ee6749eb484b17e86772b0d64b92f94a985fc5740f",
+  "code_hashes": {
+    "tools/rail2d_head_v2.py": "bc03b1531ea04100b276809dc72984594a9a9707b1f20b4f8fa4cb20b4d0c950",
+    "tools/rail2d_motion_v2.py": "cc70fa250701f341e89fc122b5b97e3001a604cc81c779e61a0fe7af49e435d6",
+    "tools/run_rail2d_v2.py": "e35563b8eefb9c11bc48c2e549131f625f544371a175c46e40e987c2a4fde296"
+  },
+  "baseline_lock": {
+    "config_hash": "754d9339b78af98afdb763bb3621cc46ccaf9b4ea57742220ea41fb1e705796d",
+    "protocol_hash": "e9e8e361edb1f2b6252c79793ce53df4d531f227c3c0d31f9958b42ceedb7e94",
+    "code_hashes": {
+      "tools/rail2d_detector.py": "b4d7f2460d9d600ee3deadc9e29bbf3e1786cb0d3b289dbea5b359cbd16f2636",
+      "tools/rail2d_common.py": "d5021624b59f4c1916ecc8740f14b2018ff62d31f918e3e076f5f328bf84a68b",
+      "tools/run_rail2d.py": "6f24d79cfa1019d5d8803d733c2e6132840a17b1d3de83463e1a4331685eaae9"
+    },
+    "note": "Frozen after development, before the first new held-out prediction. No final-driven tuning."
+  }
+}

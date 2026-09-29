@@ -1,0 +1,1719 @@
+# FINAL REALTIME ATTACK
+# LINUX DETERMINISM + POINT COUNT / ROI OPTIMIZATION
+# + LIVE MEMORY PIPELINE + MULTI-SOLVE PARALLELISM
+# TARGET: 100–200 ms CLASS OR 10 Hz SYSTEM THROUGHPUT
+
+Времени до сдачи почти не осталось.
+
+Никаких новых длинных исследовательских веток.
+
+Сейчас есть:
+
+REFERENCE C4:
+~1094 ms median inclusive history I/O
+
+FULL_NATIVE C4:
+~427 ms median inclusive history I/O
+~302 ms legacy net C4
+
+RAW → rails:
+~568 ms median.
+
+Full native:
+~2.56× быстрее C4
+~2.15× быстрее полного pipeline.
+
+Quality почти идентична
+до 75 м.
+
+На 75–100 м:
+
+far p95:
+16.64 → 18.31 cm
+
+то есть +1.67 cm.
+
+При этом:
+
+0 новых >20 cm
+0 новых >50 cm
+0 wrong-side
+0 crossing
+availability identical
+coverage native существенно выше.
+
+Главные оставшиеся проблемы:
+
+A.
+Linux output расходится с Windows.
+
+B.
+C4 всё ещё ~300–430 ms.
+
+C.
+Процесс использует примерно
+1.1 CPU cores из доступных 16.
+
+D.
+Не измерено,
+насколько runtime зависит
+от количества raw / ROI points.
+
+==================================================
+0. ОСНОВНОЙ ПРИНЦИП
+==================================================
+
+ЭТО ПОСЛЕДНИЙ PERFORMANCE STAGE.
+
+Нужно получить:
+
+либо
+
+C4 / geometry latency
+в диапазоне 100–200 ms,
+
+либо
+
+реальный 10 Hz throughput
+без growing backlog
+на 16-core CPU.
+
+Не тратить время
+на оптимизации,
+которые дают 2–5%.
+
+==================================================
+1. НЕ ВОЗВРАЩАТЬ PERSISTENT C4
+==================================================
+
+Persistent trajectory V2
+окончательно отклонена.
+
+Каждый fresh solve:
+
+FULL NATIVE FROM SCRATCH.
+
+Scheduler может reuse
+уже готовую final geometry
+между fresh solves.
+
+Но old C4 curve
+НЕ является входом
+следующего solve.
+
+==================================================
+2. LINUX — КАНОНИЧЕСКАЯ PRODUCTION PLATFORM
+==================================================
+
+Финальный Docker = Linux.
+
+Поэтому главный production gate:
+
+LINUX REFERENCE
+vs
+LINUX FULL_NATIVE.
+
+Windows больше НЕ является
+истиной,
+которую Linux обязан воспроизводить
+bitwise.
+
+Cross-OS divergence
+нужно понять и по возможности убрать,
+но deployment quality
+оценивается внутри Linux.
+
+==================================================
+3. СНАЧАЛА ПОЛНЫЙ LINUX QUALITY BENCHMARK
+==================================================
+
+ПЕРВЫМ ДЕЛОМ:
+
+внутри одного final Linux image
+
+прогнать ВСЕ прежние
+240 held-out starts:
+
+LINUX_REFERENCE
+
+и
+
+LINUX_FULL_NATIVE.
+
+Использовать тот же GT
+и те же gates.
+
+Получить:
+
+30–50
+50–75
+75–100
+
+far / near / center / CR
+
+catastrophic counts
+
+availability
+
+horizon.
+
+==================================================
+4. НЕ ТРАТИТЬ ВРЕМЯ НА WINDOWS≈LINUX,
+ЕСЛИ LINUX QUALITY НОРМАЛЬНОЕ
+==================================================
+
+Если:
+
+LINUX native vs LINUX reference
+
+имеет практически ту же quality,
+что Windows experiment,
+
+то production может быть Linux-native,
+даже если Windows и Linux
+выбирают разные marginal candidates.
+
+Но cross-platform divergence
+всё равно локализовать,
+чтобы исключить nondeterministic bug.
+
+==================================================
+5. CROSS-OS FIRST-DIVERGENCE TRACE
+==================================================
+
+Для минимум:
+
+10 identical captured starts,
+
+включая:
+
+easy case
+
+far case
+
+known divergent case
+
+worst Windows native regression.
+
+Создать deterministic trace
+КАЖДОГО C4 march step.
+
+==================================================
+6. TRACE НА КАЖДОМ STEP
+==================================================
+
+Записывать compact binary/CSV:
+
+step_id
+
+station
+
+input center
+
+basis
+
+candidate count
+
+candidate IDs
+
+candidate generation order
+
+initial params
+
+support point IDs
+
+NN distances summary
+
+objective before
+
+objective after
+
+LM iterations
+
+accepted/rejected steps
+
+final params
+
+candidate score components
+
+candidate final score
+
+ranking
+
+winner
+
+tentative state
+
+stop reason.
+
+==================================================
+7. НАЙТИ ПЕРВОЕ РАСХОЖДЕНИЕ
+==================================================
+
+Не сравнивать только final trajectory.
+
+Найти:
+
+FIRST_DIVERGING_OPERATION.
+
+Например:
+
+step 17
+candidate 2
+iteration 4
+
+Windows:
+score = ...
+
+Linux:
+score = ...
+
+Именно с этого места
+начать анализ.
+
+==================================================
+8. DETERMINISM AUDIT
+==================================================
+
+Проверить hot-path на:
+
+std::unordered_map iteration
+
+std::unordered_set
+
+priority_queue
+
+std::sort
+с неполным comparator
+
+equal-score tie
+
+parallel reductions
+
+floating summation order
+
+NaN
+
+signed zero
+
+different candidate insertion order
+
+pointer-based ordering
+
+thread completion ordering.
+
+==================================================
+9. EXPLICIT TIE BREAKING
+==================================================
+
+Все branch decisions
+должны иметь deterministic key.
+
+Например:
+
+(score, candidate_id)
+
+или:
+
+(score,
+ candidate_order,
+ parent_id).
+
+Не полагаться
+на incidental container order.
+
+==================================================
+10. SORT
+==================================================
+
+Если логика требует
+сохранения исходного order:
+
+stable_sort.
+
+Comparator должен задавать
+strict total ordering.
+
+==================================================
+11. NO UNORDERED DECISION PATH
+==================================================
+
+В decision-critical path
+не использовать iteration order
+unordered containers.
+
+Можно использовать их для lookup,
+но decision list
+явно сортировать.
+
+==================================================
+12. FIXED REDUCTIONS
+==================================================
+
+Objective / residual sums:
+
+фиксированный порядок double accumulation.
+
+Не parallel reduction,
+если порядок меняет branch.
+
+==================================================
+13. ONE THREAD DETERMINISM CONTROL
+==================================================
+
+Сначала сравнить:
+
+Windows 1 thread
+Linux 1 thread.
+
+Если divergence остаётся:
+
+проблема не threading.
+
+==================================================
+14. PORTABLE MATH AUDIT
+==================================================
+
+Если first divergence
+происходит внутри:
+
+sqrt
+hypot
+atan2
+sin/cos
+PCA/eigen
+
+измерить ULP difference.
+
+Не предполагать libm issue
+без доказательства.
+
+==================================================
+15. COMPILER AUDIT
+==================================================
+
+Linux:
+
+GCC current
+
+и diagnostic:
+
+Clang
+
+с одинаковыми strict flags.
+
+Compare first-divergence trace.
+
+Если Clang ближе к Windows
+или полностью stabilizes:
+
+зафиксировать причину.
+
+==================================================
+16. FLAGS
+==================================================
+
+Production strict build:
+
+-O3
+-fno-fast-math
+-ffp-contract=off
+
+проверить также:
+
+-fno-associative-math
+
+и отсутствие unsafe FP options.
+
+Не снижать optimization
+без измеренного эффекта.
+
+==================================================
+17. PORTABLE DETERMINISM RESULT
+==================================================
+
+В отчёте ответить:
+
+cross-OS divergence была вызвана:
+
+container ordering
+thread ordering
+FP branch sensitivity
+compiler math
+или другим.
+
+Не писать "floating point"
+без first-divergence evidence.
+
+==================================================
+18. ПОСЛЕ DETERMINISM — PERFORMANCE
+==================================================
+
+Теперь цель:
+
+найти,
+куда уходят:
+
+~427 ms inclusive C4
+
+из которых:
+
+~302 ms net C4.
+
+==================================================
+19. НЕ ИСПОЛЬЗОВАТЬ ТОЛЬКО PYTHON PROFILER
+==================================================
+
+C4 теперь C++.
+
+Нужны native timers.
+
+Внутри C++ поставить
+std::chrono timers на:
+
+history ingest
+
+map/current transform
+
+ROI broad phase
+
+ROI exact filtering
+
+spatial-index query
+
+PCA/frame construction
+
+candidate generation
+
+NN
+
+LM fitting
+
+residual evaluation
+
+candidate scoring
+
+beam management
+
+tentative confirmation
+
+memory allocation/copy
+
+output materialization.
+
+==================================================
+20. PER-STEP PROFILE
+==================================================
+
+Для каждого march step:
+
+points in ROI
+
+candidate count
+
+fit count
+
+residual evaluations
+
+runtime.
+
+==================================================
+21. PERF
+==================================================
+
+Если доступен Linux perf:
+
+perf stat
+
+и желательно:
+
+perf record.
+
+Собрать:
+
+cycles
+
+instructions
+
+IPC
+
+branch misses
+
+cache misses
+
+context switches.
+
+Если perf unavailable —
+не тратить время на установку.
+
+Native timers обязательны.
+
+==================================================
+22. RAW POINT COUNT ANALYSIS
+==================================================
+
+Для каждого solve записать:
+
+N_current_raw
+
+N_history_raw_total
+
+N_after_coarse_ROI
+
+N_after_exact_ROI
+
+N_points_used_by_candidates
+
+N_mean_per_candidate
+
+N_p95_per_candidate.
+
+==================================================
+23. CORRELATION / REGRESSION
+==================================================
+
+Проверить dependence runtime от:
+
+raw N
+
+history N
+
+ROI N
+
+candidate-local N
+
+horizon
+
+steps
+
+fits
+
+residual evaluations.
+
+Использовать:
+
+Pearson
+
+Spearman
+
+и простой linear model
+для диагностики.
+
+==================================================
+24. ОТВЕТИТЬ:
+ВЛИЯЕТ ЛИ RAW N
+==================================================
+
+Дать quantified ответ:
+
++100k raw points
+≈ +X ms
+
++100k ROI points
+≈ +Y ms
+
+если связь измерима.
+
+==================================================
+25. LIVE SYSTEM НЕ ДОЛЖНА ЧИТАТЬ LAS
+==================================================
+
+Очень важно.
+
+LAS — только offline dataset format.
+
+В реальном train pipeline
+frame уже приходит
+в RAM от LiDAR/ROS.
+
+Поэтому сделать два benchmark:
+
+OFFLINE_LAS
+
+и
+
+LIVE_MEMORY.
+
+==================================================
+26. LIVE_MEMORY MODE
+==================================================
+
+Перед benchmark:
+
+загрузить FrameData
+в память.
+
+На hot path
+НЕ читать LAS.
+
+Измерить:
+
+FrameData ready
+→
+final rails.
+
+==================================================
+27. HISTORY RING BUFFER
+==================================================
+
+Каждый arriving frame
+один раз:
+
+parse
+
+compute source metadata
+
+store map-space XYZ
+
+build required spatial index.
+
+После этого
+он живёт в ring buffer
+до 12 history frames.
+
+==================================================
+28. НЕ ПЕРЕСТРАИВАТЬ FRAME INDEX
+==================================================
+
+Spatial index каждого
+history frame:
+
+build once on arrival.
+
+Reuse all eligible solves.
+
+==================================================
+29. MAP-SPACE STORAGE
+==================================================
+
+History points хранить
+в registered map coordinates.
+
+Не преобразовывать весь
+source cloud заново
+для каждого solve.
+
+==================================================
+30. QUERY BEFORE TRANSFORM
+==================================================
+
+Это ключевая гипотеза.
+
+Вместо:
+
+transform all history points
+→ current
+→ ROI query
+
+делать:
+
+candidate/current ROI
+→ transform conservative query region
+to map coordinates
+→ query map-space index
+→ получить небольшой exact superset
+→ transform ONLY returned points
+to current
+→ exact original filter.
+
+==================================================
+31. EXACTNESS
+==================================================
+
+Final point IDs после exact filter
+должны совпадать
+со старым C4.
+
+Это engineering optimization,
+не algorithmic change.
+
+==================================================
+32. MEASURE TRANSFORM REDUCTION
+==================================================
+
+Report:
+
+points transformed before
+
+points transformed after
+
+reduction ×
+
+time saved.
+
+==================================================
+33. COMBINED HISTORY INDEX
+==================================================
+
+Проверить отдельную гипотезу:
+
+вместо query
+по 12 per-frame indexes
+
+создать logical combined
+history spatial index
+
+с metadata:
+
+source_frame
+point_index.
+
+==================================================
+34. COMBINED INDEX EXACTNESS
+==================================================
+
+Query result после exact filter
+должен совпадать
+с union старых per-frame queries.
+
+==================================================
+35. DYNAMIC GRID OPTION
+==================================================
+
+Поскольку history = 12 frames
+sliding window,
+можно проверить
+native uniform spatial hash/grid.
+
+Frame arrival:
+
+insert points.
+
+Frame expiration:
+
+remove frame bucket entries.
+
+Query:
+
+conservative cells
++
+exact Euclidean filter.
+
+==================================================
+36. GRID ONLY IF EXACT
+==================================================
+
+Никакого approximate search.
+
+==================================================
+37. LAS OFFLINE FAST PATH
+==================================================
+
+Если offline benchmark
+по-прежнему важен:
+
+проверить,
+не читает ли laspy
+ненужные dimensions.
+
+==================================================
+38. COMPACT POINT FORMAT
+==================================================
+
+Для C4 реально нужные fields
+хранить отдельно:
+
+XYZ
+source_frame
+source_index
+и только необходимые
+ring/intensity/time.
+
+Не таскать
+все LAS dimensions
+по hot path.
+
+==================================================
+39. MEMORY MAPPING
+==================================================
+
+Если LAS uncompressed:
+
+проверить numpy.memmap
+или native direct reader
+для required fields.
+
+Но live-memory mode
+имеет более высокий приоритет.
+
+==================================================
+40. WSL / DOCKER FILESYSTEM TEST
+==================================================
+
+Текущий Linux Docker
+использует Windows bind mount.
+
+Это может быть медленно.
+
+Benchmark одинаковых 48 starts:
+
+A.
+Windows bind mount
+
+B.
+WSL ext4 / Docker volume
+
+C.
+tmpfs/preloaded memory.
+
+==================================================
+41. НЕ ОБЪЯСНЯТЬ DOCKER SLOWDOWN АЛГОРИТМОМ
+==================================================
+
+Отдельно показать:
+
+I/O slowdown
+
+compute slowdown.
+
+==================================================
+42. TARGET AFTER I/O REMOVAL
+==================================================
+
+Сначала добиться:
+
+C4 inclusive
+≈ net C4.
+
+То есть убрать
+порядка сотни ms preparation,
+если profile подтвердит.
+
+==================================================
+43. POINT REDUCTION — СНАЧАЛА EXACT
+==================================================
+
+Прежде чем выбрасывать points:
+
+максимально рано
+отсечь points,
+которые математически
+не могут попасть
+ни в один current C4 ROI.
+
+==================================================
+44. CONSERVATIVE TRACK CORRIDOR
+==================================================
+
+Из frozen geometry/search limits
+вывести conservative
+3D corridor/bounds.
+
+Удалять только points,
+которые НИ ПРИ КАКОМ
+допустимом candidate
+не могут участвовать.
+
+==================================================
+45. EXACT CROP VALIDATION
+==================================================
+
+На 200 starts:
+
+selected point IDs
+
+C4 output
+
+должны совпасть.
+
+==================================================
+46. ЕСЛИ RAW N ВСЁ ЕЩЁ BOTTLENECK
+==================================================
+
+Только тогда
+разрешён quality-tested thinning.
+
+Это уже algorithmic optimization.
+
+==================================================
+47. DEVELOPMENT-ONLY DOWNSAMPLING EXPERIMENT
+==================================================
+
+Не benchmark.
+
+Проверить:
+
+100%
+75%
+50%
+35%
+25%
+
+points.
+
+==================================================
+48. НЕ RANDOM DROP
+==================================================
+
+Использовать deterministic policy.
+
+Варианты:
+
+ring/azimuth stride
+
+или
+
+voxel selection.
+
+==================================================
+49. RANGE-ADAPTIVE POLICY
+==================================================
+
+Предпочтительно НЕ выкидывать
+ценные дальние sparse points.
+
+Например:
+
+0–20m:
+можно сильнее thin
+
+20–50m:
+умеренно
+
+>50m:
+keep 100%.
+
+==================================================
+50. CR-ROI PRESERVE
+==================================================
+
+Если возможно:
+
+в likely CR / track corridor
+оставлять 100% points.
+
+Thinning только
+dense background / near redundant points.
+
+==================================================
+51. QUALITY GATE DOWNSAMPLING
+==================================================
+
+На development:
+
+30–50
+
+50–75
+
+75–100
+
+far p95.
+
+Также:
+
+>20cm
+>50cm
+wrong-side
+horizon.
+
+==================================================
+52. FREEZE BEFORE BENCHMARK
+==================================================
+
+Если какой-то density variant
+даёт большой speedup
+и проходит development:
+
+выбрать ОДИН.
+
+Freeze.
+
+Только потом
+independent Linux benchmark.
+
+==================================================
+53. НЕ ГНАТЬСЯ ЗА 25% POINTS,
+ЕСЛИ ЛОМАЕТ FAR RANGE
+==================================================
+
+Far CR sparse.
+
+Приоритет:
+quality.
+
+==================================================
+54. NATIVE MEMORY ALLOCATIONS
+==================================================
+
+Проверить,
+не аллоцируются ли
+large vectors
+на каждом march step.
+
+==================================================
+55. PREALLOCATE WORKSPACE
+==================================================
+
+На tracker lifetime:
+
+candidate buffers
+
+residual buffers
+
+Jacobian buffers
+
+ROI index buffers
+
+temporary point buffers.
+
+Resize only if capacity exceeded.
+
+==================================================
+56. PMR / ARENA OPTIONAL
+==================================================
+
+Если allocator profile
+показывает заметную стоимость:
+
+std::pmr
+или arena.
+
+Иначе пропустить.
+
+==================================================
+57. DATA LAYOUT
+==================================================
+
+Проверить hot arrays:
+
+AoS vs SoA
+
+ТОЛЬКО после profile.
+
+Не повторять старый useless sweep,
+если NN/residual больше не bottleneck.
+
+==================================================
+58. COMPILER PRODUCTION BUILD
+==================================================
+
+После logic freeze:
+
+-O3
+-flto
+
+проверить LTO.
+
+==================================================
+59. PGO
+==================================================
+
+Это реальный кандидат
+на последние 10–20%.
+
+Сделать:
+
+instrumented build
+
+прогнать representative
+development runs
+
+rebuild with profile-use.
+
+==================================================
+60. PGO QUALITY
+==================================================
+
+Output должен пройти
+Linux production gates.
+
+==================================================
+61. TARGET-SPECIFIC BUILD
+==================================================
+
+Поскольку final machine:
+Ryzen 9 7950X3D,
+
+diagnostic build:
+
+-march=znver4
+или -march=native.
+
+==================================================
+62. PRODUCTION CHOICE
+==================================================
+
+Если deployment hardware
+на хакатоне фиксирован:
+
+можно иметь:
+
+portable image
+
+и
+
+7950X3D optimized image.
+
+Не путать.
+
+==================================================
+63. FMA
+==================================================
+
+После Linux determinism fix
+можно development-only проверить:
+
+-ffp-contract=fast
+
+НЕ -ffast-math.
+
+Если quality identical
+и speedup измеримый.
+
+==================================================
+64. САМАЯ ВАЖНАЯ ПАРАЛЛЕЛЬНОСТЬ:
+ACROSS FRESH SOLVES
+==================================================
+
+Full-native fresh solves
+НЕ зависят от предыдущей
+C4 geometry.
+
+Следовательно,
+несколько frame solves
+можно выполнять одновременно.
+
+Это намного крупнее задачи,
+чем 5 candidates
+в одном march step.
+
+==================================================
+65. MULTI-SOLVE WORKERS
+==================================================
+
+На 16-core CPU
+протестировать:
+
+1
+2
+3
+4
+6
+8
+
+concurrent fresh solve workers.
+
+==================================================
+66. CAUSALITY
+==================================================
+
+Job for frame T
+получает immutable snapshot:
+
+T−11…T
+
+и разрешённые poses.
+
+Никаких future clouds.
+
+То,
+что T+1 job уже выполняется,
+не меняет input T.
+
+==================================================
+67. PUBLISH ORDER
+==================================================
+
+Completion может быть
+out of order.
+
+Публиковать geometry
+только если:
+
+source_frame >
+latest_published_source_frame.
+
+Поздно завершившийся
+старый job:
+
+discard result.
+
+==================================================
+68. NO STALE BACKLOG
+==================================================
+
+Scheduler не должен
+обязательно вычислять все frames.
+
+Но если CPU свободен,
+можно иметь несколько
+fresh jobs одновременно.
+
+==================================================
+69. WORKER POLICY
+==================================================
+
+Prototype:
+
+max N active solves
+
++
+
+latest eligible pending frame.
+
+Когда worker освобождается:
+
+берёт newest pending eligible frame.
+
+==================================================
+70. WHY THIS MATTERS
+==================================================
+
+Если один solve = 300 ms,
+но 4 independent workers:
+
+теоретический capacity
+≈ 13 solves/sec.
+
+То есть system может
+обслуживать 10Hz,
+даже если latency одного solve
+>100ms.
+
+==================================================
+71. THIS IS NOT CHEATING
+==================================================
+
+Fresh solve from scratch
+для каждого frame независим.
+
+Parallel execution
+не меняет algorithm.
+
+==================================================
+72. CPU UTILIZATION
+==================================================
+
+При 4–8 solve workers
+ожидаем наконец
+несколько реально активных cores.
+
+Measure:
+
+ΣCPU / wall
+
+system CPU%
+
+per-worker utilization.
+
+==================================================
+73. MEMORY
+==================================================
+
+Не копировать 12-frame history
+на каждый worker.
+
+Использовать immutable shared
+FrameData ownership.
+
+==================================================
+74. C++ THREADING
+==================================================
+
+При multi-solve concurrency
+внутренний candidate thread count
+может быть лучше уменьшить.
+
+Test matrix:
+
+solve_workers × candidate_threads
+
+например:
+
+1×8
+2×4
+4×2
+4×1
+6×1
+8×1.
+
+==================================================
+75. OVERSUBSCRIPTION
+==================================================
+
+BLAS/OMP/MKL:
+
+1.
+
+Total runnable native threads
+не должен бесконтрольно
+превышать physical cores.
+
+==================================================
+76. MAIN THROUGHPUT BENCHMARK
+==================================================
+
+Simulate real 10Hz arrivals.
+
+Measure:
+
+jobs submitted
+
+jobs completed
+
+jobs superseded
+
+publish rate
+
+latency from frame timestamp
+to publish
+
+queue depth
+
+CPU%
+
+RAM.
+
+==================================================
+77. SUCCESS SYSTEM GATE
+==================================================
+
+10Hz input.
+
+PASS если:
+
+no unbounded backlog
+
+raw consumer p95 <100ms
+
+positive horizon >=90%
+на representative moving runs
+
+и geometry publish frequency
+достаточна для horizon.
+
+==================================================
+78. LATENCY GATE
+==================================================
+
+Отдельно попытаться:
+
+LIVE_MEMORY full C4:
+
+median <=200ms.
+
+Stretch:
+
+<=150ms.
+
+Но если single-solve =250–300ms
+и multi-worker system
+держит 10Hz без backlog,
+это тоже production success.
+
+==================================================
+79. QUALITY FINAL
+==================================================
+
+После всех selected optimizations
+на Linux:
+
+full 240 held-out
+reference vs optimized native.
+
+==================================================
+80. QUALITY CRITERIA
+==================================================
+
+Не обязательно использовать
+старый формальный +1.0cm gate
+как единственную истину.
+
+Но показать честно:
+
+30–50
+50–75
+75–100
+
+и catastrophic cases.
+
+==================================================
+81. PRACTICAL ACCEPTANCE
+==================================================
+
+Отдельно дать
+ENGINEERING VERDICT.
+
+Если:
+
+30–75 effectively identical
+
+75–100 within ~2cm
+
+0 new >20cm
+
+0 new >50cm
+
+0 structural failures
+
+horizon better
+
+и speed materially higher,
+
+явно указать это.
+
+==================================================
+82. НЕ ПОДКРУЧИВАТЬ BENCHMARK
+==================================================
+
+Все density /
+compiler /
+ROI choices:
+
+development only.
+
+После freeze:
+
+benchmark один раз.
+
+==================================================
+83. REPORT
+==================================================
+
+Создать:
+
+REPORT_REALTIME_FINAL.md
+REPORT_REALTIME_FINAL.html
+
+==================================================
+84. FIRST PAGE
+==================================================
+
+LINUX QUALITY:
+
+reference/native
+
+30–50 p95
+
+50–75 p95
+
+75–100 p95
+
+>20
+>50
+availability
+horizon.
+
+==================================================
+85. SPEED FIRST PAGE
+==================================================
+
+OFFLINE LAS:
+
+C4 median/p95
+total median/p95.
+
+LIVE MEMORY:
+
+C4 median/p95
+total median/p95.
+
+==================================================
+86. POINT COUNT FIRST PAGE
+==================================================
+
+raw points/frame
+
+history points
+
+ROI points
+
+candidate points
+
+и quantified runtime sensitivity.
+
+==================================================
+87. THREADING FIRST PAGE
+==================================================
+
+single solve latency
+
+best multi-solve configuration
+
+solves/sec
+
+geometry publishes/sec
+
+CPU cores utilized.
+
+==================================================
+88. BEFORE / AFTER
+==================================================
+
+Breakdown:
+
+LAS I/O
+history preparation
+transforms
+spatial query
+native marching
+downstream.
+
+==================================================
+89. REQUIRED ABLATION TABLE
+==================================================
+
+Baseline full-native
+
++ live-memory ring
+
++ build-index-on-arrival
+
++ query-before-transform
+
++ exact conservative crop
+
++ combined index/grid if useful
+
++ point-density variant if accepted
+
++ LTO/PGO
+
++ CPU-specific build
+
++ multi-solve concurrency.
+
+==================================================
+90. EACH ROW
+==================================================
+
+median
+
+p95
+
+speedup
+
+quality status
+
+keep/reject.
+
+==================================================
+91. REQUIRED FILES
+==================================================
+
+linux_quality_240.csv
+
+cross_os_first_divergence.csv
+
+determinism_trace/
+
+point_count_runtime.csv
+
+runtime_regression.csv
+
+live_memory_timing.csv
+
+history_index_timing.csv
+
+roi_timing.csv
+
+point_reduction_ablation.csv
+
+compiler_ablation.csv
+
+pgo_ablation.csv
+
+worker_matrix.csv
+
+realtime_10hz.csv
+
+cpu_utilization.csv
+
+memory.csv
+
+FINAL_REALTIME_RECOMMENDATION.md.
+
+==================================================
+92. STOP RULE
+==================================================
+
+Если получено:
+
+LIVE_MEMORY full solve <=200ms
+
+или
+
+10Hz system throughput
+с no backlog
+и acceptable horizon,
+
+STOP.
+
+Не продолжать micro-tuning.
+
+==================================================
+93. FINAL DECISION
+==================================================
+
+Дать один из:
+
+A.
+Single solve <=100ms.
+
+B.
+Single solve 100–200ms.
+
+C.
+Single solve >200ms,
+but multi-solve 10Hz production viable.
+
+D.
+Neither latency nor throughput target reached.
+
+==================================================
+94. ОСНОВНОЙ ВОПРОС
+==================================================
+
+Почему на 16-core 7950X3D
+текущий процесс использует
+в среднем ~1.1 ядра?
+
+И как перенести работу
+с последовательного hot path
+на:
+
+preprocessing at frame arrival
+
+shared immutable history
+
+exact early ROI
+
+и независимые concurrent
+full-native frame solves?
+
+==================================================
+95. НЕ ПРИНОСИТЬ ЕЩЁ ОДИН
+"1.15× SPEEDUP"
+==================================================
+
+Нужен production-level result.
+
+Приоритет:
+
+1. Linux quality;
+2. deterministic divergence localization;
+3. remove disk/history work from solve;
+4. exact point-work reduction;
+5. multi-solve CPU parallelism;
+6. only then compiler / thinning tweaks.
+
+==================================================
+96. ФИНАЛ
+==================================================
+
+В конце ответить конкретно:
+
+- удалось ли стабилизировать Linux;
+- что было причиной divergence;
+- влияет ли raw point count;
+- сколько ms даёт +100k points;
+- сколько точек реально использует C4;
+- single-solve latency;
+- live-memory latency;
+- best workers×threads;
+- active CPU cores;
+- publishes/sec at 10Hz;
+- positive horizon fraction;
+- final Linux quality;
+- можно ли ставить native backend
+  production default.

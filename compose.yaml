@@ -1,0 +1,12 @@
+services:
+  inspector:
+    build: .
+    ports:
+      - "127.0.0.1:8870:8080"
+    volumes:
+      - rail-data:/data
+    shm_size: 1gb
+    init: true
+    stop_grace_period: 15s
+volumes:
+  rail-data:

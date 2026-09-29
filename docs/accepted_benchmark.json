@@ -1,0 +1,170 @@
+{
+  "complete": {
+    "pass_": true,
+    "config": {
+      "input_hz": 10,
+      "registration_stride": 1,
+      "geometry_stride_original": 1,
+      "geometry_offset_original": 0,
+      "near_m": 8.0,
+      "width_m": 2.1,
+      "height_m": 3.0,
+      "penetration_m": 0.03,
+      "extension_m": 20.0,
+      "far_forward_only": true,
+      "near_compute_target_ms": 20,
+      "near_result_deadline_ms": 100,
+      "registration_admission_ms": 100,
+      "pose_result_deadline_ms": 250,
+      "geometry_admission_ms": 400,
+      "geometry_result_deadline_ms": 800,
+      "model_max_age_ms": 1000,
+      "near_calibration_hold_ms": 5000,
+      "recovery_watchdog_ms": 1800,
+      "ring_slots": 48,
+      "max_points": 400000,
+      "source_sha256": "73ee5bfc2087bb160267110563b298a9629ac9e3df1459d857ec72ce1ef89d60",
+      "primary_vertical_agreement_m": 0.03,
+      "primary_lateral_agreement_m": 0.1,
+      "primary_history_versions": 3,
+      "full_hz": 3,
+      "bottom_penetration_m": 0.1,
+      "far_weight_start_m": 70.0,
+      "min_weighted_points": 3.0,
+      "history_raw_frames": 12,
+      "extension_guard_enabled": true
+    },
+    "received": 1510,
+    "scheduled": 1510,
+    "stress": false,
+    "input_seconds": 150.85703297600412,
+    "recording_seconds": 150.85112058,
+    "wall_seconds": 152.98369577000267,
+    "startup_seconds": 3.9869093759989482,
+    "payload_sha256": "3dd1cd5bc5679ce88ed02358450c80d5235bda794aa5a467dcebe06e5c6151ee",
+    "pending_replacements": {
+      "near": 0,
+      "registration": 45,
+      "pose": 0,
+      "geometry": 0,
+      "model_near": 0,
+      "model_far": 0,
+      "recovery_in": 0,
+      "recovery_out": 0,
+      "retry": 0,
+      "near_reference": 0
+    },
+    "source_db": "/tmp/rail-refresh-input.db3",
+    "no_saved_poses": true,
+    "no_annotation": true,
+    "baseline_files_unchanged": 403,
+    "runtime_unchanged": true,
+    "transport": "paced DB3, no DDS measurement"
+  },
+  "processed": 369,
+  "rate": 2.4461203773710807,
+  "within_200ms": 25,
+  "events": {
+    "GEOMETRY_COMPLETE": 369,
+    "BATCH_UNAVAILABLE": 47,
+    "GEOMETRY_ADMISSION_EXPIRED": 3
+  },
+  "statuses": {
+    "NO_CONFIRMED_COMPONENT_THIS_BATCH": 281,
+    "UNKNOWN_NEAR_REFERENCE": 13,
+    "INTRUSION": 75
+  },
+  "metrics": {
+    "prepare_ms": {
+      "median": 63.73582199739758,
+      "p95": 95.26123859832293,
+      "max": 116.16006300027948
+    },
+    "solve_ms": {
+      "median": 177.96666699723573,
+      "p95": 221.10879140091126,
+      "max": 269.286276998173
+    },
+    "rail_refresh_ms": {
+      "median": 0.2576120023149997,
+      "p95": 0.33730600407579914,
+      "max": 15.286223002476618
+    },
+    "path_policy_ms": {
+      "median": 9.249665003153495,
+      "p95": 12.687567599641625,
+      "max": 15.833918005228043
+    },
+    "envelope_build_ms": {
+      "median": 0.6250389997148886,
+      "p95": 1.0336519990232769,
+      "max": 2.21496399899479
+    },
+    "query_ms": {
+      "median": 5.263980994641315,
+      "p95": 8.210252200660761,
+      "max": 11.826989000837784
+    },
+    "cluster_ms": {
+      "median": 0.015659999917261302,
+      "p95": 1.5894894022494537,
+      "max": 14.169900998240337
+    },
+    "tracker_ms": {
+      "median": 0.02669199602678418,
+      "p95": 2.0216949997120537,
+      "max": 18.22706399980234
+    },
+    "export_ms": {
+      "median": 16.95657000527717,
+      "p95": 24.21485420345561,
+      "max": 35.26060599688208
+    },
+    "total_ms": {
+      "median": 276.9638309982838,
+      "p95": 334.7853257990209,
+      "max": 364.6332429998438
+    },
+    "age_ms": {
+      "median": 542.8597349964548,
+      "p95": 680.6211094022727,
+      "max": 744.7591029995237
+    },
+    "oldest_evidence_age_ms": {
+      "median": 772.4784080055542,
+      "p95": 948.346502201457,
+      "max": 1023.5477230016841
+    }
+  },
+  "objects": {
+    "confirmed": 11,
+    "truth_matches": {
+      "19": [
+        1
+      ],
+      "60": [
+        3
+      ],
+      "76": [
+        5
+      ],
+      "81": [
+        10
+      ],
+      "106": [
+        14
+      ],
+      "107": [
+        15
+      ]
+    },
+    "known_false": [
+      4,
+      6,
+      7,
+      8,
+      11
+    ],
+    "unreviewed": []
+  }
+}

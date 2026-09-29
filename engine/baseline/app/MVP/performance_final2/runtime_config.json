@@ -1,0 +1,11 @@
+{
+  "version": "performance-v2",
+  "backend": "native_batch_spatial",
+  "workers": 1,
+  "thresholds": {
+    "forward": 256,
+    "reverse": 1024
+  },
+  "float64_absolute_tolerance": 1e-10,
+  "discrete_tolerance": 0
+}

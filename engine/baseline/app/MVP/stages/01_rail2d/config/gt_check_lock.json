@@ -1,0 +1,14 @@
+{
+  "gate_sha256": "195616c7710f0bf3f0d3cfb657c6866f1b16f7926e607f6a6cd9df5809705223",
+  "protocol_sha256": "221b355335ccaf3defdd9b67f9c36e3d296cf78edf52605f2a459163a4ab343a",
+  "v2_artifact_hashes": {
+    "per_frame.csv": "80ec2061b354ecd8924e4d65b477a2c829699475af6094e6319a08073e629816",
+    "config.json": "b7a9ec57f0be163800cf74e57bf2fb4a0e1785d024caa57ebb0a9593254aea6f",
+    "protocol.json": "6f33dc0f7b04c4d4f23935ee6749eb484b17e86772b0d64b92f94a985fc5740f",
+    "lock.json": "853aab291b864552e3e565e63bcc276790875defd8394d7c9f7c4463b4255ca3",
+    "REPORT_RAIL2D_V2.md": "78d8db7a336364ef70e78625a491727357ed5ed6edecc91b17bcf39dea90ab65",
+    "REPORT_RAIL2D_V2.html": "6235b1daa7aefe0fa42f382f1b1245ed64a961ce85a7a4ec2fa465f7829f8e4b",
+    "gallery.html": "c5cb1f934f540704bfb94c512647ec250e9f52c03408c65d857b17ac2ea4a4fb",
+    "verification.json": "032f34f3d5d4e124215375a3f7f25bee0934a4f16ac4d1bc7a3ca67e07f2401f"
+  }
+}

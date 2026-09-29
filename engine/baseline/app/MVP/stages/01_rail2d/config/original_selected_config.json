@@ -1,0 +1,30 @@
+{
+  "detector": {
+    "bin_m": 0.005,
+    "kernel_m": 0.025,
+    "gauge_m": 1.567446415200217,
+    "height_m": -1.093482465194201,
+    "vmin": -1.4,
+    "vmax": 1.4,
+    "wmin": -1.35,
+    "wmax": -0.65,
+    "center_max": 0.3,
+    "gauge_soft": [
+      1.48,
+      1.62
+    ],
+    "cant_max": 0.18,
+    "min_support": 6,
+    "confidence_threshold": 0.3056375291503369,
+    "head_quantile": 0.75
+  },
+  "optimal_length_m": 4,
+  "selected_on": "development evenly spaced samples only",
+  "primary_length_m": 8,
+  "gt_definition_hash": "4dc4162db73b184bf8d178622a3da73039ebb43cc73f5129fc1549cf31d116b3",
+  "bin_kernel_objective": 0.1107720749807507,
+  "confidence_pending": false,
+  "sample_optimal_length_m": 4,
+  "length_selection_source": "all development frames, before confidence refusal; same run-equal p95 objective",
+  "confidence_source_frames": 4315
+}

@@ -1,0 +1,294 @@
+{
+  "stage": "01_rail2d",
+  "snapshot_date": "2026-09-26",
+  "source_project": "C:\\Users\\heinrich.wirth\\deptrans",
+  "detector": "rail2d_head_v2 + rail2d_motion_v2",
+  "evaluation": "v2_gt_distance_checked",
+  "copied_files": 45,
+  "core_files_exact": true,
+  "full_reports_relative_path": "../../../results_rail2d_v2_gt_checked",
+  "files": [
+    {
+      "source": "tools/rail2d_detector.py",
+      "path": "src/rail2d_detector.py",
+      "sha256": "b4d7f2460d9d600ee3deadc9e29bbf3e1786cb0d3b289dbea5b359cbd16f2636",
+      "bytes": 6442
+    },
+    {
+      "source": "tools/rail2d_head_v2.py",
+      "path": "src/rail2d_head_v2.py",
+      "sha256": "bc03b1531ea04100b276809dc72984594a9a9707b1f20b4f8fa4cb20b4d0c950",
+      "bytes": 6369
+    },
+    {
+      "source": "tools/rail2d_motion_v2.py",
+      "path": "src/rail2d_motion_v2.py",
+      "sha256": "cc70fa250701f341e89fc122b5b97e3001a604cc81c779e61a0fe7af49e435d6",
+      "bytes": 2687
+    },
+    {
+      "source": "tools/rail2d_gt_geometry.py",
+      "path": "src/rail2d_gt_geometry.py",
+      "sha256": "195616c7710f0bf3f0d3cfb657c6866f1b16f7926e607f6a6cd9df5809705223",
+      "bytes": 2239
+    },
+    {
+      "source": "tools/analyze_rail2d_v2.py",
+      "path": "experiment_snapshot/tools/analyze_rail2d_v2.py",
+      "sha256": "55dd3370e2b1fca9c63cd6ebb17ccb135b1b31d28b14f8c6ff8694b5511b4f35",
+      "bytes": 11925
+    },
+    {
+      "source": "tools/animate_rail2d_v2.py",
+      "path": "experiment_snapshot/tools/animate_rail2d_v2.py",
+      "sha256": "9a84560423a9d81813bf2579a4cfd494b6c9ae86f4177ff1ea7bf89cc79dd57b",
+      "bytes": 2660
+    },
+    {
+      "source": "tools/benchmark_rail2d.py",
+      "path": "experiment_snapshot/tools/benchmark_rail2d.py",
+      "sha256": "40b04e41415d98edc376e063c5e1a7e4fb1321d92d6bb5442092776c5a459f1a",
+      "bytes": 1747
+    },
+    {
+      "source": "tools/investigate_rail2d_failures.py",
+      "path": "experiment_snapshot/tools/investigate_rail2d_failures.py",
+      "sha256": "911d5efb42acf0f1d274ff5c54753f3b09d41fee5f8876334a16fedabe27da79",
+      "bytes": 13124
+    },
+    {
+      "source": "tools/rail2d_common.py",
+      "path": "experiment_snapshot/tools/rail2d_common.py",
+      "sha256": "d5021624b59f4c1916ecc8740f14b2018ff62d31f918e3e076f5f328bf84a68b",
+      "bytes": 10587
+    },
+    {
+      "source": "tools/rail2d_detector.py",
+      "path": "experiment_snapshot/tools/rail2d_detector.py",
+      "sha256": "b4d7f2460d9d600ee3deadc9e29bbf3e1786cb0d3b289dbea5b359cbd16f2636",
+      "bytes": 6442
+    },
+    {
+      "source": "tools/rail2d_gt_geometry.py",
+      "path": "experiment_snapshot/tools/rail2d_gt_geometry.py",
+      "sha256": "195616c7710f0bf3f0d3cfb657c6866f1b16f7926e607f6a6cd9df5809705223",
+      "bytes": 2239
+    },
+    {
+      "source": "tools/rail2d_head_v2.py",
+      "path": "experiment_snapshot/tools/rail2d_head_v2.py",
+      "sha256": "bc03b1531ea04100b276809dc72984594a9a9707b1f20b4f8fa4cb20b4d0c950",
+      "bytes": 6369
+    },
+    {
+      "source": "tools/rail2d_motion_v2.py",
+      "path": "experiment_snapshot/tools/rail2d_motion_v2.py",
+      "sha256": "cc70fa250701f341e89fc122b5b97e3001a604cc81c779e61a0fe7af49e435d6",
+      "bytes": 2687
+    },
+    {
+      "source": "tools/reevaluate_rail2d_gt.py",
+      "path": "experiment_snapshot/tools/reevaluate_rail2d_gt.py",
+      "sha256": "37961a13781d251b2c13e422f7d9c05eaad4b847cc09fece5fec2ace89e45501",
+      "bytes": 12085
+    },
+    {
+      "source": "tools/render_rail2d.py",
+      "path": "experiment_snapshot/tools/render_rail2d.py",
+      "sha256": "65b3eeb4cef71a88c8d36d1973fa3d7dc0e56eb4af531a05d3b45954a16f655c",
+      "bytes": 13659
+    },
+    {
+      "source": "tools/render_rail2d_gt_checked.py",
+      "path": "experiment_snapshot/tools/render_rail2d_gt_checked.py",
+      "sha256": "6362e6a4903ee0dca951c64ffcc176ec56ebe885ddcab1f56a42af7d8a2b3f46",
+      "bytes": 19985
+    },
+    {
+      "source": "tools/render_rail2d_v2.py",
+      "path": "experiment_snapshot/tools/render_rail2d_v2.py",
+      "sha256": "88345153b430285c3514c231f6bacdf61ad6ee4438366bd3a6e7f1d70d05b4e1",
+      "bytes": 18126
+    },
+    {
+      "source": "tools/report_rail2d.py",
+      "path": "experiment_snapshot/tools/report_rail2d.py",
+      "sha256": "8e4d43277fcc1f11f3b3df22f68106213b4632d0252992f3d139b7a417546a35",
+      "bytes": 37798
+    },
+    {
+      "source": "tools/report_rail2d_failures.py",
+      "path": "experiment_snapshot/tools/report_rail2d_failures.py",
+      "sha256": "225c98e8627a8827dee45867f409c09cd47c47fe6c99166dcbe1ff12942e8087",
+      "bytes": 42491
+    },
+    {
+      "source": "tools/report_rail2d_gt_checked.py",
+      "path": "experiment_snapshot/tools/report_rail2d_gt_checked.py",
+      "sha256": "1b7e6b07342b21dea25902018daa0292325031cc7a2f256a658b9d02f177dc40",
+      "bytes": 32571
+    },
+    {
+      "source": "tools/report_rail2d_v2.py",
+      "path": "experiment_snapshot/tools/report_rail2d_v2.py",
+      "sha256": "5b4d8344160ceb2bb8dd560c10977945288c317be47b599336bcd36d96fc53b1",
+      "bytes": 40409
+    },
+    {
+      "source": "tools/run_rail2d.py",
+      "path": "experiment_snapshot/tools/run_rail2d.py",
+      "sha256": "6f24d79cfa1019d5d8803d733c2e6132840a17b1d3de83463e1a4331685eaae9",
+      "bytes": 12619
+    },
+    {
+      "source": "tools/run_rail2d_v2.py",
+      "path": "experiment_snapshot/tools/run_rail2d_v2.py",
+      "sha256": "e35563b8eefb9c11bc48c2e549131f625f544371a175c46e40e987c2a4fde296",
+      "bytes": 9736
+    },
+    {
+      "source": "tools/verify_rail2d.py",
+      "path": "experiment_snapshot/tools/verify_rail2d.py",
+      "sha256": "2628e268a242f74e411770960b6633c46685833968f57913fc135415db2b2715",
+      "bytes": 3643
+    },
+    {
+      "source": "tools/verify_rail2d_gt_checked.py",
+      "path": "experiment_snapshot/tools/verify_rail2d_gt_checked.py",
+      "sha256": "86cac23ffb875e635cda78f7787881f4d198350b75014638dbbc2712d915ef0d",
+      "bytes": 8074
+    },
+    {
+      "source": "tools/verify_rail2d_outputs.py",
+      "path": "experiment_snapshot/tools/verify_rail2d_outputs.py",
+      "sha256": "f8f670e185683112c74c54b6c2d0dfc762de672a70768dfbcdb9e2ced7f72af6",
+      "bytes": 4165
+    },
+    {
+      "source": "tools/verify_rail2d_v2.py",
+      "path": "experiment_snapshot/tools/verify_rail2d_v2.py",
+      "sha256": "bc70bb3803344be97d1f3c04143c0f3e88aedeaeb26e00463f409273ba9fb9d9",
+      "bytes": 3952
+    },
+    {
+      "source": "tools/verify_rail2d_v2_outputs.py",
+      "path": "experiment_snapshot/tools/verify_rail2d_v2_outputs.py",
+      "sha256": "f9acff05eb31b522e5514097da4f30b8be38d0bca86e649a2eb9cfe3ce0d935a",
+      "bytes": 6345
+    },
+    {
+      "source": "tools/bootstrap.py",
+      "path": "experiment_snapshot/tools/bootstrap.py",
+      "sha256": "39971cecfd8c9f6d8a3efc1967aefe4570f4b544a36c41c759223103d429239c",
+      "bytes": 302
+    },
+    {
+      "source": "docs/RAIL2D_EXPERIMENT.md",
+      "path": "experiment_snapshot/docs/RAIL2D_EXPERIMENT.md",
+      "sha256": "94d298fd4bb83e5d1a6e69b896e9842ee9497f47d090c32b98f172115c668ade",
+      "bytes": 4085
+    },
+    {
+      "source": "docs/RAIL2D_HEAD_V2.md",
+      "path": "experiment_snapshot/docs/RAIL2D_HEAD_V2.md",
+      "sha256": "2280bd5f3a60932bfb73eb89098179d61dce42be0fc8b0d0aa175b37e8f1f95d",
+      "bytes": 5062
+    },
+    {
+      "source": "docs/RAIL2D_GT_CHECKED.md",
+      "path": "experiment_snapshot/docs/RAIL2D_GT_CHECKED.md",
+      "sha256": "7991db81fe120918c76975072cb16adfbaa9062d9e6abb044931cd30a0328880",
+      "bytes": 4360
+    },
+    {
+      "source": "results_rail2d_v2/config.json",
+      "path": "config/detector_v2.json",
+      "sha256": "b7a9ec57f0be163800cf74e57bf2fb4a0e1785d024caa57ebb0a9593254aea6f",
+      "bytes": 813
+    },
+    {
+      "source": "results_rail2d_v2/protocol.json",
+      "path": "config/detector_protocol_v2.json",
+      "sha256": "6f33dc0f7b04c4d4f23935ee6749eb484b17e86772b0d64b92f94a985fc5740f",
+      "bytes": 1610
+    },
+    {
+      "source": "results_rail2d_v2/lock.json",
+      "path": "config/detector_lock_v2.json",
+      "sha256": "853aab291b864552e3e565e63bcc276790875defd8394d7c9f7c4463b4255ca3",
+      "bytes": 1147
+    },
+    {
+      "source": "results_rail2d_v2_gt_checked/protocol.json",
+      "path": "config/gt_check_protocol.json",
+      "sha256": "221b355335ccaf3defdd9b67f9c36e3d296cf78edf52605f2a459163a4ab343a",
+      "bytes": 1590
+    },
+    {
+      "source": "results_rail2d_v2_gt_checked/lock.json",
+      "path": "config/gt_check_lock.json",
+      "sha256": "2c6440a1325da696b510b6ccc5a3af744df7af9c3643c3262e3572d1399546e1",
+      "bytes": 942
+    },
+    {
+      "source": "results_rail2d/selected_config.json",
+      "path": "config/original_selected_config.json",
+      "sha256": "754d9339b78af98afdb763bb3621cc46ccaf9b4ea57742220ea41fb1e705796d",
+      "bytes": 887
+    },
+    {
+      "source": "results_rail2d/protocol.json",
+      "path": "config/original_protocol.json",
+      "sha256": "e9e8e361edb1f2b6252c79793ce53df4d531f227c3c0d31f9958b42ceedb7e94",
+      "bytes": 2630
+    },
+    {
+      "source": "results_rail2d/final_evaluation_lock.json",
+      "path": "config/original_lock.json",
+      "sha256": "5b1d8b88767b78710c5080560144080c940c2dbe299aeaaca476e017318832f6",
+      "bytes": 604
+    },
+    {
+      "source": "results_rail2d_v2_gt_checked/full_summary.csv",
+      "path": "reference/full_summary.csv",
+      "sha256": "71f8f2672eaeb6a61f6b2c771be062e6c236abb79ced4d3a97dfed972e3772b7",
+      "bytes": 18881
+    },
+    {
+      "source": "results_rail2d_v2_gt_checked/run_summary.csv",
+      "path": "reference/run_summary.csv",
+      "sha256": "811f8d49d1bf73272a6cf9597dfd663b8b93f6981a481d5d2010ffbc8b3ada00",
+      "bytes": 59787
+    },
+    {
+      "source": "results_rail2d_v2_gt_checked/verification.json",
+      "path": "reference/verification.json",
+      "sha256": "39db64ec7a59f137693cc4d2ff2ffed6b832455ecbdaa342e95449a8edf40679",
+      "bytes": 1418
+    },
+    {
+      "source": "results_rail2d_v2_gt_checked/rerun_verification.json",
+      "path": "reference/rerun_verification.json",
+      "sha256": "8f8309743386e69f1739c5e89f7232ea161c6466e69cff07aa55fe24f79aa7b4",
+      "bytes": 237
+    },
+    {
+      "source": "results_rail2d_v2/synthetic_checks.json",
+      "path": "reference/synthetic_checks.json",
+      "sha256": "69fc19738e2f039167a067bb3be08a2270a2a1fb822e9a9f44b29a0c681c5896",
+      "bytes": 564
+    },
+    {
+      "source": null,
+      "path": "README.md",
+      "sha256": "23f9a54e9c9a0c646692bfb3981ef76fbefeeada8bfbdea6c196addaee25caa8",
+      "bytes": 7522
+    },
+    {
+      "source": null,
+      "path": "requirements.txt",
+      "sha256": "57e74730633249faccf68cf27f4ffd05df5bffb1245dee9b36acce5e4c48019f",
+      "bytes": 29
+    }
+  ]
+}

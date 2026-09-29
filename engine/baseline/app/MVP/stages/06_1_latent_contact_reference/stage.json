@@ -1,0 +1,9 @@
+{
+  "stage": "STEP6.1_LATENT_CONTACT_REFERENCE",
+  "status": "COMPLETED_RESEARCH",
+  "production_replaced": false,
+  "results": "results_latent_contact_reference",
+  "best": "LOSS_CAUCHY",
+  "verdict": "C",
+  "freeze_sha256": "268daefdbe1a7002b2c04d7f4496b503e2d4a1b3dc12f3967ade5fabea202ade"
+}

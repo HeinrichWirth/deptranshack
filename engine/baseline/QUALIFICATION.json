@@ -1,0 +1,188 @@
+{
+  "pass_": true,
+  "frozen_original_files_unchanged": 85,
+  "full_verification": {
+    "pass_": true,
+    "frames": 1510,
+    "poses_exact": true,
+    "common_solves": 1223,
+    "differences": [],
+    "causal_jobs": 1292,
+    "las_files": 0,
+    "all_export_hashes_checked": true
+  },
+  "identical_fixed_work_frames": 24,
+  "fixed_original": {
+    "n": 24,
+    "median_ms": 155.0596404999851,
+    "p95_ms": 275.4217873494326
+  },
+  "fixed_copy": {
+    "n": 24,
+    "median_ms": 143.06281149993083,
+    "p95_ms": 251.82892245006767
+  },
+  "stage_table": [
+    {
+      "stage": "Чтение DB3",
+      "old_median_ms": 4.001634000132981,
+      "old_p95_ms": 8.268638399977135,
+      "copy_median_ms": 3.8853749997542764,
+      "copy_p95_ms": 8.195119049969435
+    },
+    {
+      "stage": "Декодирование",
+      "old_median_ms": 0.8220129998335324,
+      "old_p95_ms": 2.674424899942096,
+      "copy_median_ms": 0.8040955003707495,
+      "copy_p95_ms": 2.927529850103382
+    },
+    {
+      "stage": "Сшивка целиком",
+      "old_median_ms": 253.9444864999041,
+      "old_p95_ms": 398.80224264998105,
+      "copy_median_ms": 127.7019525000469,
+      "copy_p95_ms": 261.1228517501786
+    },
+    {
+      "stage": "Создание общего облака FrameData",
+      "old_median_ms": 10.484570000244275,
+      "old_p95_ms": 25.57891480009857,
+      "copy_median_ms": 10.086357499858423,
+      "copy_p95_ms": 24.448313500215587
+    },
+    {
+      "stage": "Приём/индексирование/планировщик",
+      "old_median_ms": 11.991368500048338,
+      "old_p95_ms": 27.92652100004034,
+      "copy_median_ms": 11.583993999920494,
+      "copy_p95_ms": 27.996446999623004
+    },
+    {
+      "stage": "STEP1: ходовые рельсы",
+      "old_median_ms": 129.11182450011438,
+      "old_p95_ms": 169.57508414984656,
+      "copy_median_ms": 24.935261999871727,
+      "copy_p95_ms": 63.401266699793275
+    },
+    {
+      "stage": "STEP2: контактный рельс",
+      "old_median_ms": 141.0591700000623,
+      "old_p95_ms": 312.56760144999583,
+      "copy_median_ms": 71.54089099958583,
+      "copy_p95_ms": 168.14704664998317
+    },
+    {
+      "stage": "C4 с подготовкой истории",
+      "old_median_ms": 162.42457799990007,
+      "old_p95_ms": 232.16275820016102,
+      "copy_median_ms": 137.0866414995362,
+      "copy_p95_ms": 212.69418070010036
+    },
+    {
+      "stage": "Контракт геометрии C4",
+      "old_median_ms": 64.19181599994772,
+      "old_p95_ms": 195.77177269998174,
+      "copy_median_ms": 30.771540500154515,
+      "copy_p95_ms": 110.72867575026065
+    },
+    {
+      "stage": "3D seed adapter",
+      "old_median_ms": 10.529075999784254,
+      "old_p95_ms": 28.019533900032904,
+      "copy_median_ms": 7.617922499321139,
+      "copy_p95_ms": 16.658576700456248
+    },
+    {
+      "stage": "C4 smoothing",
+      "old_median_ms": 18.156449999878532,
+      "old_p95_ms": 113.79616739991432,
+      "copy_median_ms": 11.146434500005853,
+      "copy_p95_ms": 23.734328999762507
+    },
+    {
+      "stage": "STEP6: восстановление рельсов",
+      "old_median_ms": 20.732910000333504,
+      "old_p95_ms": 35.50746450009683,
+      "copy_median_ms": 14.301841499673174,
+      "copy_p95_ms": 24.288010149439284
+    },
+    {
+      "stage": "Provenance",
+      "old_median_ms": 3.605502000027627,
+      "old_p95_ms": 19.379961750314518,
+      "copy_median_ms": 2.296357499744772,
+      "copy_p95_ms": 6.748458799847869
+    },
+    {
+      "stage": "Сериализация/запись решения",
+      "old_median_ms": 58.646299499969246,
+      "old_p95_ms": 186.29312805001064,
+      "copy_median_ms": 10.193000000072061,
+      "copy_p95_ms": 28.793257250072216
+    },
+    {
+      "stage": "Геометрия целиком",
+      "old_median_ms": 568.1356805000632,
+      "old_p95_ms": 826.9033247999912,
+      "copy_median_ms": 341.4838889998464,
+      "copy_p95_ms": 503.45991520025564
+    }
+  ],
+  "variants": [
+    {
+      "name": "baseline_2x4_400",
+      "wall_ms": 109491.06395299986,
+      "solves": 308,
+      "published": 289,
+      "publication_p95_ms": 66235.46750179975
+    },
+    {
+      "name": "packed_1x4_400",
+      "wall_ms": 83187.52024500008,
+      "solves": 189,
+      "published": 183,
+      "publication_p95_ms": 33891.380511199626
+    },
+    {
+      "name": "local_1x4_400",
+      "wall_ms": 49869.674863999535,
+      "solves": 193,
+      "published": 187,
+      "publication_p95_ms": 9519.21220340082
+    },
+    {
+      "name": "local_1x2_kd2_400",
+      "wall_ms": 48983.67379999945,
+      "solves": 152,
+      "published": 146,
+      "publication_p95_ms": 8984.043973750659
+    },
+    {
+      "name": "local_1x4_kd2_400",
+      "wall_ms": 53073.79068299997,
+      "solves": 170,
+      "published": 164,
+      "publication_p95_ms": 13027.778113100838
+    },
+    {
+      "name": "local_2x2_400",
+      "wall_ms": 56724.54860200014,
+      "solves": 297,
+      "published": 283,
+      "publication_p95_ms": 15885.30509989996
+    },
+    {
+      "name": "local_2x4_400",
+      "wall_ms": 58609.703029999764,
+      "solves": 302,
+      "published": 290,
+      "publication_p95_ms": 17469.31982130036
+    }
+  ],
+  "full_before_ms": 432451.8440020002,
+  "full_after_ms": 244941.04759900074,
+  "speedup": 1.7655343938512835,
+  "temporary_container_removed": true,
+  "no_las": true
+}

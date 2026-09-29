@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.so
+*.pyd
+.DS_Store
+data/
+local-results/
+*.db3
+*.las
+*.laz
+*.tar.gz
+*.log
+.env
+saved-runs/

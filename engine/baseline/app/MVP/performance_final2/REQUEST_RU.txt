@@ -1,0 +1,2168 @@
+# FINAL C4 PERFORMANCE SPRINT
+# NATIVE BATCHING + NN/KDTREE AUDIT + JACOBIAN + PARALLELISM
+# + ASYNC LATEST-FRAME SCHEDULER
+# + FULL EXPLANATORY REPORT
+
+У нас уже есть финальный deployable geometry pipeline.
+
+QUALITY / GEOMETRY RESEARCH ЗАКРЫТ.
+
+Текущая frozen chain:
+
+STEP1
+→ STEP2 F4-NU
+→ C4 marching
+→ STEP1_TO_STEP6_SEED_ADAPTER
+→ C4_SMOOTH
+→ STEP6.
+
+Все математические параметры,
+thresholds,
+beam,
+history,
+templates,
+acceptance,
+geometry priors
+зафиксированы.
+
+Теперь задача:
+
+МАКСИМАЛЬНО УСКОРИТЬ
+тот же самый C4 / final pipeline,
+
+не меняя его алгоритмический результат.
+
+Нужно проверить все основные
+performance-гипотезы,
+измерить их отдельно,
+комбинировать только доказанные выигрыши
+и подробно объяснить:
+
+- почему каждая гипотеза сработала;
+- почему не сработала;
+- какой bottleneck остался;
+- что мешает дальнейшему ускорению.
+
+==================================================
+0. БАЗОВЫЕ ЧИСЛА, КОТОРЫЕ НУЖНО ВОСПРОИЗВЕСТИ
+==================================================
+
+На текущем чистом 32-start benchmark:
+
+PYTHON:
+full solve median ≈1543.9 ms
+p95 ≈1909.6 ms
+C4 median ≈1330.4 ms
+
+PYTHON SPATIAL:
+full median ≈1344.6 ms
+C4 median ≈1141.9 ms
+
+NATIVE:
+full median ≈1202.7 ms
+C4 median ≈998.5 ms
+
+NATIVE + SPATIAL:
+full median ≈1094.9 ms
+p95 ≈1547.2 ms
+C4 median ≈891.2 ms.
+
+Все discrete outputs
+в проверенных тестах совпадали.
+
+Сначала воспроизвести эти цифры
+в пределах нормального measurement noise.
+
+Если benchmark сильно отличается,
+сначала разобраться почему.
+
+==================================================
+1. НОВАЯ ПАПКА
+==================================================
+
+Создать:
+
+MVP/performance_final2/
+
+и:
+
+results_performance_final2/
+
+Не изменять frozen stages.
+
+Все ускорения:
+
+wrappers
+native extension
+alternative backend
+
+держать здесь.
+
+==================================================
+2. ОСНОВНОЕ ПРАВИЛО
+==================================================
+
+PERFORMANCE ONLY.
+
+ЗАПРЕЩЕНО:
+
+- менять thresholds;
+- менять beam width;
+- менять history depth;
+- уменьшать число candidates;
+- уменьшать radius;
+- менять Cauchy loss;
+- менять template;
+- менять geometry equations;
+- менять initialization;
+- менять acceptance;
+- менять stop criteria;
+- менять max_nfev
+  ради ускорения;
+- менять float precision;
+- использовать approximate NN,
+  если меняется результат;
+- использовать future cloud;
+- использовать GT.
+
+Если optimization
+изменяет discrete output —
+
+она отклоняется.
+
+==================================================
+3. ДВА УРОВНЯ EQUIVALENCE
+==================================================
+
+LEVEL A:
+
+bitwise exact.
+
+LEVEL B:
+
+float difference <= заранее
+зафиксированного tolerance
+и при этом EXACT:
+
+support indices
+candidate choice
+LEFT/RIGHT
+status
+stop reason
+march horizon
+accepted/rejected
+final rail geometry decisions.
+
+Для native float64
+tolerance задать заранее:
+
+1e-10
+
+если существующие численные тесты
+это допускают.
+
+Не менять tolerance
+после просмотра результатов.
+
+==================================================
+4. FIXED BENCHMARK COHORT
+==================================================
+
+Использовать один и тот же
+фиксированный cohort.
+
+Минимум:
+
+32 clean starts
+из предыдущего benchmark.
+
+Дополнительно:
+
+100–200 starts
+для final equivalence.
+
+И:
+
+несколько full runs
+для async/system test.
+
+Сохранить список starts:
+
+benchmark_cohort.json.
+
+==================================================
+5. ОТДЕЛИТЬ ДВА ВОПРОСА
+==================================================
+
+A.
+
+HOW FAST CAN ONE C4 SOLVE BECOME?
+
+B.
+
+HOW OFTEN DO WE ACTUALLY NEED
+A NEW C4 SOLVE?
+
+Не смешивать.
+
+==================================================
+6. PART A — DEEP C4 OPTIMIZATION
+==================================================
+
+Текущий profile показывает
+примерно:
+
+455 least_squares / 4 updates
+
+median ≈130 least_squares/update
+
+nfev median ≈24
+
+507 KDTree builds
+
+26113 KDTree queries
+
+значительное время:
+
+least_squares
+Python residual callback
+approx_derivative
+KDTree build/query
+sphere/ROI operations.
+
+Проверить все гипотезы ниже.
+
+==================================================
+7. HYPOTHESIS H1:
+SMALL-N BRUTE FORCE VS KDTREE
+==================================================
+
+В profile
+типичные local sets
+часто порядка сотен points.
+
+Построение KDTree
+для маленького N
+может быть дороже,
+чем exact brute-force NN.
+
+Реализовать native C++ kernel:
+
+exact_nn_bruteforce(...)
+
+float64.
+
+Использовать:
+
+squared Euclidean distances.
+
+Не approximation.
+
+==================================================
+8. H1 THRESHOLD SWEEP
+==================================================
+
+Diagnostic benchmark threshold:
+
+N <
+
+32
+64
+128
+256
+512
+1024.
+
+Для каждого N:
+
+KDTree build + queries
+
+vs
+
+native brute-force.
+
+Измерить:
+
+ns/query
+
+total fit time.
+
+==================================================
+9. H1 SEMANTICS
+==================================================
+
+Brute-force
+обязан возвращать
+ТОЧНО тот же nearest distance.
+
+Если tie:
+
+сохранить ту же
+distance semantics.
+
+Если индекс tie
+не используется downstream,
+достаточно exact distance.
+
+Если индекс используется —
+нужно deterministic tie rule.
+
+==================================================
+10. H1 FINAL
+==================================================
+
+Выбрать threshold
+только по microbenchmark.
+
+Не выбирать
+по downstream quality.
+
+==================================================
+11. HYPOTHESIS H2:
+KDTREE BUILD REUSE
+==================================================
+
+507 builds / 4 updates
+подозрительно много.
+
+Audit:
+
+для каждого KDTree build:
+
+array pointer/id
+shape
+content hash optional
+source candidate id
+fit id
+march step.
+
+Определить:
+
+сколько деревьев
+строятся на одинаковых points.
+
+==================================================
+12. H2 CACHE
+==================================================
+
+Если point set identical:
+
+reuse tree.
+
+Cache lifetime:
+
+один C4 solve
+или один marching step.
+
+Не кэшировать
+невалидно между changing poses.
+
+==================================================
+13. H2 REPORT
+==================================================
+
+Report:
+
+tree builds before
+tree builds after
+
+cache hit rate
+
+time saved.
+
+Если reuse почти нет:
+
+так и написать.
+
+==================================================
+14. HYPOTHESIS H3:
+REMOVE REVERSE TREE WHEN SMALL
+==================================================
+
+Если reverse coverage
+строит KDTree
+на маленьком candidate set:
+
+сравнить exact brute-force
+reverse distances.
+
+Не менять coverage definition.
+
+==================================================
+15. HYPOTHESIS H4:
+NATIVE RESIDUAL COMPLETE
+==================================================
+
+Текущий C++ kernel
+ускоряет только
+часть point-to-template distance.
+
+Перенести весь residual evaluation
+в C++:
+
+parameter transform
+
+point transform
+
+forward NN distances
+
+reverse coverage distances
+
+robust residual assembly
+
+coverage-related residuals
+
+все auxiliary residual terms.
+
+Один pybind call
+на residual evaluation.
+
+==================================================
+16. H4 NO TEMPORARY PYTHON ARRAYS
+==================================================
+
+Не создавать на Python side:
+
+p-anchor
+
+temporary transformed points
+
+distance arrays
+
+mask arrays
+
+если они нужны только residual.
+
+Все внутри C++.
+
+==================================================
+17. H4 MEMORY
+==================================================
+
+Использовать reusable
+thread-local workspaces,
+если безопасно.
+
+Но возвращаемый residual
+должен иметь собственную память,
+если SciPy может удерживать его.
+
+==================================================
+18. H4 BENCHMARK
+==================================================
+
+Micro:
+
+residual evaluation speedup.
+
+Macro:
+
+C4 speedup.
+
+Показать:
+
+kernel speedup
+vs
+full solver speedup.
+
+==================================================
+19. HYPOTHESIS H5:
+FINITE DIFFERENCE JACOBIAN IN C++
+==================================================
+
+Текущий approx_derivative
+дорогой.
+
+Нужно изучить EXACT semantics
+SciPy numerical derivative:
+
+scheme
+step size
+bounds handling
+parameter scaling.
+
+==================================================
+20. H5 VERSION A
+==================================================
+
+Реализовать C++ callable:
+
+residual_and_fd_jacobian(...)
+
+которая вычисляет:
+
+base residual
+
+и тот же finite-difference Jacobian.
+
+==================================================
+21. H5 SCIPY INTEGRATION
+==================================================
+
+Передать:
+
+fun = native residual
+
+jac = native finite-difference jacobian.
+
+Сам solver:
+тот же scipy.optimize.least_squares.
+
+==================================================
+22. H5 EQUIVALENCE
+==================================================
+
+Сначала проверить
+captured individual fits.
+
+Compare:
+
+residual
+jacobian
+final x
+cost
+active_mask
+status
+nfev
+njev.
+
+==================================================
+23. H5 STRICT TEST
+==================================================
+
+Если final candidates
+или downstream decisions
+меняются:
+
+H5 production reject.
+
+Но сохранить diagnostic result.
+
+==================================================
+24. HYPOTHESIS H6:
+ANALYTIC JACOBIAN
+==================================================
+
+Только после H5.
+
+Если residual
+кусочно дифференцируемый
+и nearest correspondence
+fixed locally:
+
+можно вывести analytic
+или semi-analytic Jacobian.
+
+Но это более рискованно.
+
+==================================================
+25. H6 STATUS
+==================================================
+
+ANALYTIC_JACOBIAN
+считать YELLOW optimization.
+
+Не включать,
+если нет полной equivalence.
+
+==================================================
+26. HYPOTHESIS H7:
+ONE NATIVE FIT
+==================================================
+
+Следующий уровень:
+
+перенести один candidate fit
+целиком в C++.
+
+Но НЕ обязательно
+сразу менять solver.
+
+Сначала оценить,
+можно ли вызвать
+эквивалентный trust-region solver.
+
+==================================================
+27. SOLVER OPTIONS
+==================================================
+
+Исследовать:
+
+A.
+SciPy least_squares
++ native fun/jac
+
+B.
+native implementation
+того же маленького problem
+
+C.
+Ceres
+только как spike.
+
+==================================================
+28. CERES НЕ ВКЛЮЧАТЬ АВТОМАТИЧЕСКИ
+==================================================
+
+Ceres может изменить:
+
+termination
+
+step order
+
+floating operations
+
+final optimum.
+
+Поэтому Ceres:
+
+benchmark candidate,
+не production default.
+
+==================================================
+29. SMALL PARAMETER DIMENSION
+==================================================
+
+Зафиксировать
+реальный размер optimized parameter vector.
+
+Если это очень маленькая задача,
+специализированный local solver
+может быть быстрее
+generic SciPy.
+
+Но output equivalence важнее.
+
+==================================================
+30. NATIVE FIT REPORT
+==================================================
+
+Для каждого backend:
+
+fit latency
+
+n iterations
+
+final parameter delta
+
+final cost
+
+candidate choice equality.
+
+==================================================
+31. HYPOTHESIS H8:
+BATCH ALL CANDIDATES OF ONE MARCH STEP
+==================================================
+
+Это одна из главных гипотез.
+
+Сейчас:
+
+Python
+→ candidate
+→ solver
+→ Python
+→ next candidate.
+
+Создать API:
+
+native_evaluate_candidate_batch(
+    candidates,
+    points,
+    template,
+    states,
+    configs
+)
+
+==================================================
+32. H8 GOAL
+==================================================
+
+Один pybind transition
+на marching step.
+
+Внутри C++:
+
+для каждого candidate:
+
+prepare fit
+
+run residual / local optimization
+
+compute score
+
+return full candidate record.
+
+==================================================
+33. H8 IMPORTANT
+==================================================
+
+Не выбирать best candidate
+иначе.
+
+Python может продолжить
+делать final original ordering/selection
+
+ИЛИ
+
+C++ может вернуть
+все candidate results
+в исходном порядке.
+
+==================================================
+34. H8 DETERMINISTIC ORDER
+==================================================
+
+Return candidate results
+строго в original candidate order.
+
+Tie-breaking unchanged.
+
+==================================================
+35. HYPOTHESIS H9:
+CANDIDATE PARALLELISM IN C++
+==================================================
+
+После H8.
+
+Candidates одного marching step
+часто независимы.
+
+Использовать:
+
+std::thread / thread pool
+или OpenMP.
+
+==================================================
+36. H9 THREAD COUNTS
+==================================================
+
+Benchmark:
+
+1
+2
+4
+8
+16 threads.
+
+На 7950X3D.
+
+==================================================
+37. H9 OVERSUBSCRIPTION
+==================================================
+
+При candidate parallelism:
+
+BLAS
+OMP
+MKL
+
+внутри fit:
+
+1 thread.
+
+Не допустить
+nested oversubscription.
+
+==================================================
+38. H9 DETERMINISM
+==================================================
+
+Параллельность
+не должна менять:
+
+candidate order
+
+scores
+
+ties
+
+decisions.
+
+Считать независимо,
+собирать результаты
+в predetermined slots.
+
+==================================================
+39. H9 LOAD BALANCE
+==================================================
+
+Report:
+
+candidate fit time distribution.
+
+Если fits очень короткие,
+thread overhead может мешать.
+
+Тогда batch несколько candidates
+per worker.
+
+==================================================
+40. HYPOTHESIS H10:
+PERSISTENT NATIVE THREAD POOL
+==================================================
+
+Не создавать threads
+на каждый march step.
+
+Создать pool
+на lifetime Pipeline/C4 tracker.
+
+==================================================
+41. HYPOTHESIS H11:
+SPATIAL HASH / VOXEL BROAD PHASE
+==================================================
+
+Только exact broad-phase.
+
+Можно построить
+uniform spatial grid/hash.
+
+Query возвращает
+conservative superset.
+
+После этого:
+
+exact Euclidean radius filter.
+
+==================================================
+42. H11 REQUIREMENT
+==================================================
+
+Final point set
+должен совпадать
+с KDTree result EXACT.
+
+Grid используется только
+для ускорения broad-phase.
+
+==================================================
+43. H11 BENCHMARK
+==================================================
+
+Compare:
+
+SciPy cKDTree
+
+native KDTree if implemented
+
+spatial hash
+
+brute-force.
+
+На реальных ROI sizes.
+
+==================================================
+44. HYPOTHESIS H12:
+SOA MEMORY LAYOUT
+==================================================
+
+Проверить C++:
+
+AoS:
+[x,y,z][N]
+
+vs
+
+SoA:
+x[N], y[N], z[N].
+
+Для distance kernels.
+
+Использовать SIMD-friendly loop.
+
+==================================================
+45. SIMD
+==================================================
+
+Compiler auto-vectorization
+разрешена.
+
+Flags:
+
+-O3
+
+но:
+
+-fno-fast-math
+-ffp-contract=off
+
+для эквивалентности.
+
+Проверить compiler vectorization report.
+
+==================================================
+46. NO -ffast-math
+==================================================
+
+Не включать.
+
+==================================================
+47. HYPOTHESIS H13:
+REDUCE ALLOCATIONS
+==================================================
+
+В C4 hot path
+найти repeated:
+
+np.array
+np.asarray copy
+np.concatenate
+np.stack
+np.unique
+boolean masks
+lists/dicts.
+
+==================================================
+48. H13 STRATEGY
+==================================================
+
+Hoist immutable arrays.
+
+Preallocate
+fixed-shape workspaces.
+
+Reuse buffers
+где ownership безопасен.
+
+==================================================
+49. H13 REPORT
+==================================================
+
+До/после:
+
+alloc call counts
+
+Python object counts
+если возможно
+
+time.
+
+==================================================
+50. HYPOTHESIS H14:
+MEMOIZATION EXPANSION
+==================================================
+
+Уже есть memoization identical fits.
+
+Проверить:
+
+какой hit rate.
+
+И есть ли
+identical intermediate inputs:
+
+template tree
+
+candidate transformed points
+
+coverage tree
+
+frame basis.
+
+==================================================
+51. NO HASHING OVERHEAD TRAP
+==================================================
+
+Если content hashing
+дороже пересчёта —
+
+не использовать.
+
+Предпочитать:
+
+object identity
+stable candidate key.
+
+==================================================
+52. HYPOTHESIS H15:
+SCIPY SETTINGS AUDIT
+==================================================
+
+НЕ менять settings.
+
+Но проверить,
+не передаются ли каждый раз
+одинаковые:
+
+bounds
+loss config
+x_scale
+diff_step
+
+и можно ли
+precompute representations.
+
+==================================================
+53. HYPOTHESIS H16:
+GIL RELEASE
+==================================================
+
+Native kernels:
+
+py::gil_scoped_release
+
+во время heavy computation.
+
+Измерить.
+
+==================================================
+54. HYPOTHESIS H17:
+PROCESS-LEVEL PARALLELISM
+==================================================
+
+Не для одного sequential run.
+
+Но для offline processing
+несколько независимых runs:
+
+1
+2
+4
+8 processes.
+
+Отдельная throughput metric.
+
+==================================================
+55. НЕ ПУТАТЬ LATENCY И THROUGHPUT
+==================================================
+
+Report отдельно:
+
+single-run latency
+
+multi-run offline throughput.
+
+==================================================
+56. PART B:
+ASYNC LATEST-FRAME ARCHITECTURE
+==================================================
+
+Даже быстрый C4
+не обязан работать 10 Hz.
+
+Geometry static in map coordinates.
+
+Obstacle processing
+может работать каждый raw frame.
+
+==================================================
+57. CURRENT SYNCHRONOUS LIMITATION
+==================================================
+
+Сейчас CLI:
+
+raw frame arrives
+
+→ geometry solve blocking
+
+→ next frame.
+
+Если solve 1 sec
+при 10 Hz:
+
+очередь растёт.
+
+Так нельзя делать production-like.
+
+==================================================
+58. ASYNC GEOMETRY WORKER
+==================================================
+
+Создать prototype:
+
+GeometryWorker.
+
+State:
+
+current_geometry
+
+current_geometry_source_frame
+
+worker_busy
+
+pending_latest_frame
+
+last_success_pose.
+
+==================================================
+59. LATEST-VALUE QUEUE
+==================================================
+
+Максимум:
+
+1 active solve
+
++
+
+1 pending newest frame.
+
+Если новый raw frame приходит,
+пока worker busy:
+
+pending_latest_frame =
+newest frame.
+
+Старый pending frame
+заменяется.
+
+НЕ очередь:
+
+T+1
+T+2
+T+3
+...
+
+==================================================
+60. WHY
+==================================================
+
+Если geometry solve завершился
+через 1 сек,
+
+нет смысла
+последовательно считать
+10 устаревших geometry states.
+
+Следующий solve
+должен использовать
+самый свежий допустимый frame.
+
+==================================================
+61. GEOMETRY CONSUMER
+==================================================
+
+На каждом 10 Hz frame:
+
+obstacle-side consumer
+получает:
+
+latest published map geometry
+
+и трансформирует её
+в current frame.
+
+Это НЕ новый geometry solve.
+
+==================================================
+62. ASYNC TRIGGER
+==================================================
+
+Сохранить текущий
+0.5 m spatial logic.
+
+Fresh solve request
+только когда:
+
+distance from last successful
+geometry update
+>= 0.5m
+
+и нет уже достаточного
+pending request.
+
+==================================================
+63. PENDING REQUEST
+==================================================
+
+Если worker busy
+и threshold reached:
+
+latest eligible frame
+становится pending.
+
+Новые eligible frames
+заменяют pending
+на более свежий.
+
+==================================================
+64. POSE DIRECTION CONTRACT
+==================================================
+
+Сохранить
+уже утверждённый
+accumulated-pose direction adapter.
+
+No future cloud.
+
+==================================================
+65. ASYNC SIMULATION
+==================================================
+
+Очень важно:
+
+не просто offline loop.
+
+Симулировать
+реальные source timestamps 10 Hz.
+
+Geometry solve занимает
+его фактически измеренное wall time.
+
+==================================================
+66. MEASURE AGE
+==================================================
+
+Для каждого raw frame:
+
+geometry_source_frame
+
+geometry_age_seconds
+
+distance_since_geometry_source
+
+remaining_horizon.
+
+==================================================
+67. ASYNC METRICS
+==================================================
+
+Report:
+
+raw frame rate
+
+geometry solve rate
+
+geometry publish rate
+
+dropped/superseded geometry requests
+
+median geometry age
+
+p90/p95 geometry age
+
+distance age
+
+remaining horizon.
+
+==================================================
+68. DO NOT CALL SUPERSEDED FRAMES FAILURES
+==================================================
+
+Это сознательно не рассчитанные
+geometry updates.
+
+Status:
+
+GEOMETRY_REQUEST_SUPERSEDED.
+
+==================================================
+69. NO BACKLOG
+==================================================
+
+Главная проверка:
+
+queue depth
+никогда >1 pending.
+
+==================================================
+70. PERFORMANCE WITH CURRENT C4
+==================================================
+
+Сначала async simulation
+на:
+
+current native_spatial.
+
+==================================================
+71. PERFORMANCE WITH BEST NEW C4
+==================================================
+
+Затем повторить
+с лучшим backend
+этого research.
+
+==================================================
+72. HORIZON SAFETY ANALYSIS
+==================================================
+
+Не вводить новый
+production threshold молча.
+
+Но diagnostic:
+
+какой remaining horizon
+имеется при каждом raw frame.
+
+Bins:
+
+<5m
+5–10
+10–20
+20–30
+30–50
+>50.
+
+==================================================
+73. TIME-TO-HORIZON
+==================================================
+
+При current speed:
+
+time until remaining horizon = 0.
+
+Report distribution.
+
+Это важнее,
+чем просто geometry age.
+
+==================================================
+74. OPTIONAL HORIZON-AWARE POLICY
+==================================================
+
+Только diagnostic variant.
+
+Не production default.
+
+Можно проверить:
+
+приоритет solve повышается,
+когда remaining horizon
+становится маленьким.
+
+Но нельзя менять
+сам C4.
+
+==================================================
+75. PART C:
+COMBINE WINNERS
+==================================================
+
+После independent ablations
+собрать только доказанные optimizations.
+
+Candidate final backend:
+
+NATIVE_BATCH_SPATIAL.
+
+==================================================
+76. COMBINATION ORDER
+==================================================
+
+Добавлять:
+
+baseline
+
++ spatial
+
++ brute-force threshold
+
++ tree reuse
+
++ native full residual
+
++ native FD jac
+
++ candidate batch
+
++ candidate parallelism.
+
+После каждого шага:
+
+benchmark.
+
+==================================================
+77. НЕ ПРИПИСЫВАТЬ SPEEDUP НЕПОНЯТНО ЧЕМУ
+==================================================
+
+Сделать waterfall table:
+
+Optimization      Full ms   C4 ms   Δ
+
+Baseline
+Spatial
++ H1
++ H2
++ H4
++ H5
++ H8
++ H9
+Final.
+
+==================================================
+78. MICROBENCHMARK VS MACRO
+==================================================
+
+Для каждой гипотезы:
+
+micro speedup
+
+C4 speedup
+
+full solve speedup.
+
+==================================================
+79. AMDAHL ANALYSIS
+==================================================
+
+Для каждой optimization
+вычислить:
+
+какую долю total
+она теоретически могла ускорить.
+
+Сравнить:
+
+expected maximum
+
+actual.
+
+Объяснить discrepancy.
+
+==================================================
+80. PERFORMANCE TARGETS
+==================================================
+
+Относительно исходного:
+
+1543.9 ms full solve.
+
+GOOD:
+
+<750 ms
+≈2×.
+
+VERY GOOD:
+
+<500 ms
+≈3×.
+
+EXCELLENT:
+
+<250 ms
+≈6×.
+
+STRETCH:
+
+<150 ms
+≈10×.
+
+Не менять algorithm
+ради достижения target.
+
+==================================================
+81. C4 TARGETS
+==================================================
+
+Current native_spatial
+C4 ≈891 ms.
+
+Targets:
+
+<500
+<300
+<150
+<100 ms.
+
+==================================================
+82. STOP RULE
+==================================================
+
+Если после:
+
+native residual
+native FD
+small-N NN
+tree reuse
+candidate batching
+candidate parallelism
+
+C4 всё ещё >500ms,
+
+не начинать ночью
+полный rewrite
+в новый algorithm.
+
+Зафиксировать
+реальный предел
+текущей formulation.
+
+==================================================
+83. FULL SOLVER PORT RULE
+==================================================
+
+Полный native solver
+делать только если:
+
+profiling показывает
+>=30% remaining C4
+в SciPy orchestration /
+numerical solver overhead
+
+и
+
+H4/H5 уже реализованы.
+
+==================================================
+84. FULL SOLVER PROTOTYPE
+==================================================
+
+Если условие выполнено:
+
+сделать isolated prototype
+на captured fits.
+
+Не подключать сразу
+к final pipeline.
+
+==================================================
+85. FULL SOLVER EQUIVALENCE
+==================================================
+
+Нужно:
+
+candidate-level equality
+
+и full C4 equality.
+
+Если нет:
+
+оставить только research result.
+
+==================================================
+86. DOCKER
+==================================================
+
+Все native tests
+обязательно повторить
+в Linux Docker.
+
+Не ограничиваться Windows.
+
+==================================================
+87. DOCKER BENCHMARK
+==================================================
+
+На том же CPU,
+если Docker Desktop/WSL
+использует его.
+
+Report:
+
+Windows native
+
+Docker Linux native.
+
+==================================================
+88. BUILD FLAGS
+==================================================
+
+C++17
+
+-O3
+
+-no fast math
+
+no unsafe contractions.
+
+Можно:
+
+-march=native
+
+только отдельный diagnostic.
+
+Portable build:
+default.
+
+==================================================
+89. HOST-OPTIMIZED BUILD
+==================================================
+
+Diagnostic:
+
+-march=native.
+
+Compare speed.
+
+Не production default
+без решения portability.
+
+==================================================
+90. COMPILER REPORT
+==================================================
+
+Сохранить:
+
+compiler
+version
+flags
+vectorization diagnostics.
+
+==================================================
+91. THREAD BENCHMARK
+==================================================
+
+Очень важно:
+
+для native batch:
+
+1
+2
+4
+8
+16.
+
+Показать scaling efficiency:
+
+speedup / threads.
+
+==================================================
+92. CPU AFFINITY OPTIONAL
+==================================================
+
+7950X3D имеет
+неоднородную topology/cache.
+
+Если легко:
+
+diagnostic pinning
+на один CCD
+vs all cores.
+
+Но это низкий приоритет.
+
+==================================================
+93. MEMORY
+==================================================
+
+Для каждого backend:
+
+peak RSS
+
+native workspace
+
+tree memory.
+
+==================================================
+94. CORRECTNESS FINAL
+==================================================
+
+Лучшую комбинацию
+прогнать минимум:
+
+200 starts
+
+или максимально доступный
+cohort за разумное время.
+
+==================================================
+95. DISCRETE OUTPUT CHECK
+==================================================
+
+Обязательно:
+
+0 differences.
+
+Если хотя бы один:
+
+показать case
+и optimization,
+которая вызвала divergence.
+
+==================================================
+96. FLOAT CHECK
+==================================================
+
+Report:
+
+max
+p99
+median
+
+absolute XYZ/state differences.
+
+==================================================
+97. FULL QUALITY SANITY
+==================================================
+
+Не делать новый research.
+
+Но проверить:
+
+far p95 bins
+не изменились
+за пределами numerical tolerance.
+
+==================================================
+98. FAILURE MODE REPORT
+==================================================
+
+Если optimization failed:
+
+не писать просто:
+
+"не ускорилось".
+
+Написать:
+
+WHY.
+
+Категории:
+
+A.
+overhead dominated
+
+B.
+N too large/small
+
+C.
+cache hit rate low
+
+D.
+GIL / Python boundary
+
+E.
+native solver mismatch
+
+F.
+thread overhead
+
+G.
+memory bandwidth
+
+H.
+KDTree already optimal
+
+I.
+algorithm sequential dependency
+
+J.
+Amdahl limit.
+
+==================================================
+99. HYPOTHESIS TABLE
+==================================================
+
+Обязательная таблица:
+
+ID
+Hypothesis
+Expected reason
+Implemented?
+Equivalent?
+Micro speedup
+C4 speedup
+Full speedup
+Why success/failure
+Keep?
+
+==================================================
+100. FINAL REPORT
+==================================================
+
+Создать:
+
+REPORT_C4_OPTIMIZATION_FINAL.md
+
+и HTML.
+
+==================================================
+101. REPORT FIRST PAGE
+==================================================
+
+Показать:
+
+ORIGINAL:
+full median
+C4 median
+
+CURRENT native_spatial:
+full median
+C4 median
+
+BEST NEW:
+full median
+p95
+C4 median
+p95
+
+FULL SPEEDUP:
+...
+
+C4 SPEEDUP:
+...
+
+ASYNC effective state:
+...
+
+geometry publish rate:
+...
+
+median geometry age:
+...
+
+p95 geometry age:
+...
+
+queue backlog:
+...
+
+==================================================
+102. WATERFALL
+==================================================
+
+Обязательный график:
+
+Baseline
+→ spatial
+→ native distance
+→ brute-force/tree reuse
+→ native residual
+→ native Jacobian
+→ batch
+→ threads
+→ final.
+
+==================================================
+103. FLAME / TIME BREAKDOWN
+==================================================
+
+Before vs after:
+
+least_squares
+residual
+derivative
+KDTree build
+KDTree query
+candidate records
+sphere
+transforms
+other.
+
+==================================================
+104. BEFORE/AFTER CALL COUNTS
+==================================================
+
+Report:
+
+least_squares calls
+
+residual calls
+
+KDTree builds
+
+KDTree queries
+
+pybind transitions
+
+allocations.
+
+==================================================
+105. PYBIND TRANSITIONS
+==================================================
+
+Очень важно.
+
+Estimate:
+
+before
+
+after.
+
+Цель H8:
+резко уменьшить
+Python↔C++ boundary count.
+
+==================================================
+106. WHY C++ HELPED OR DID NOT
+==================================================
+
+Отдельный раздел:
+
+"C++ analysis".
+
+Объяснить:
+
+какая часть workload
+уже была native SciPy
+
+какая была Python-bound
+
+какая memory-bound
+
+какая sequential.
+
+==================================================
+107. WHY PARALLELISM HELPED OR DID NOT
+==================================================
+
+Отдельный раздел:
+
+candidate count
+
+candidate duration
+
+thread overhead
+
+scaling.
+
+==================================================
+108. ASYNC SYSTEM REPORT
+==================================================
+
+Отдельно:
+
+ASYNC_GEOMETRY_REPORT.md
+
+По каждому full run:
+
+raw frames
+
+fresh solves
+
+superseded requests
+
+published geometry states
+
+reuse frames
+
+median/p95 geometry age
+
+minimum remaining horizon
+
+time with valid state.
+
+==================================================
+109. TWO FINAL METRICS
+==================================================
+
+Не смешивать:
+
+GEOMETRY_SOLVE_LATENCY
+
+и:
+
+RAW_FRAME_SERVICE_LATENCY.
+
+Raw frame consumer
+с reuse geometry
+может быть real-time,
+даже если C4 solve
+медленнее 100ms.
+
+==================================================
+110. FINAL VERDICT
+==================================================
+
+Выбрать один:
+
+A.
+C4 <100ms,
+10Hz geometry feasible.
+
+B.
+C4 100–250ms,
+fast asynchronous geometry feasible.
+
+C.
+C4 250–500ms,
+async latest-frame architecture recommended.
+
+D.
+C4 >500ms,
+current formulation remains compute-heavy,
+but async reuse makes system usable.
+
+==================================================
+111. FINAL BACKEND DECISION
+==================================================
+
+Написать:
+
+production backend:
+
+python
+или
+native_spatial
+или
+native_batch_spatial.
+
+И почему.
+
+==================================================
+112. DEFAULT NATIVE RULE
+==================================================
+
+Если native backend:
+
+- full Docker equivalence passed;
+- >=20% total speedup;
+- no discrete differences;
+
+тогда можно рекомендовать:
+
+C4_BACKEND=native...
+
+как default.
+
+Иначе:
+оставить opt-in.
+
+==================================================
+113. NO SILENT CHANGES
+==================================================
+
+Если для ускорения
+пришлось изменить
+хоть одну mathematical semantic:
+
+это отдельный
+EXPERIMENTAL variant.
+
+Не смешивать
+с final equivalent backend.
+
+==================================================
+114. DELIVERABLES
+==================================================
+
+results_performance_final2/
+
+REPORT_C4_OPTIMIZATION_FINAL.md
+REPORT_C4_OPTIMIZATION_FINAL.html
+
+ASYNC_GEOMETRY_REPORT.md
+
+hypothesis_results.csv
+
+waterfall.csv
+
+c4_before_after.csv
+
+call_counts.csv
+
+nn_benchmark.csv
+
+tree_reuse.csv
+
+residual_benchmark.csv
+
+jacobian_benchmark.csv
+
+candidate_batch_benchmark.csv
+
+thread_scaling.csv
+
+native_equivalence.csv
+
+full_equivalence.csv
+
+async_runs.csv
+
+geometry_age.csv
+
+horizon_age.csv
+
+docker_benchmark.csv
+
+memory.csv
+
+FINAL_PERFORMANCE_RECOMMENDATION.md
+
+MANIFEST.json.
+
+==================================================
+115. ВРЕМЕННОЙ ПРИОРИТЕТ
+==================================================
+
+Если времени мало,
+порядок:
+
+1.
+H1 small-N brute-force
+
+2.
+H2 tree reuse
+
+3.
+H4 full native residual
+
+4.
+H5 native finite-difference Jacobian
+
+5.
+H8 native candidate batch
+
+6.
+H9 C++ candidate parallelism
+
+7.
+async latest-frame worker
+
+8.
+full native solver
+ТОЛЬКО если предыдущие шаги
+ещё оставляют большой
+SciPy overhead.
+
+==================================================
+116. НЕ ОСТАНАВЛИВАТЬСЯ НА MICROBENCHMARK
+==================================================
+
+Optimization считается полезной,
+только если она ускоряет:
+
+C4
+
+или
+
+full solve.
+
+"Kernel 10×"
+без изменения total runtime
+не является победой.
+
+==================================================
+117. ОСНОВНОЙ ВОПРОС
+==================================================
+
+Можно ли ускорить
+тот же самый frozen C4
+в несколько раз
+
+без изменения
+ни одного его решения?
+
+==================================================
+118. ВТОРОЙ ВОПРОС
+==================================================
+
+Если C4 всё равно
+не укладывается в 10Hz:
+
+может ли
+async latest-frame architecture
+
+обеспечить
+обслуживание каждого raw LiDAR frame
+без растущего backlog?
+
+==================================================
+119. ТРЕТИЙ ВОПРОС
+==================================================
+
+Каков реальный
+Amdahl limit
+текущей formulation?
+
+==================================================
+120. ФИНАЛЬНЫЙ ОТВЕТ
+==================================================
+
+В конце дать конкретно:
+
+- лучший backend;
+- median/p95;
+- ускорение относительно baseline;
+- ускорение C4;
+- число CPU threads;
+- RAM;
+- Docker result;
+- geometry update rate;
+- raw-frame service capability;
+- какие гипотезы дали выигрыш;
+- какие не дали;
+- почему;
+- что осталось bottleneck;
+- стоит ли дальше переписывать C4
+  или остановиться.

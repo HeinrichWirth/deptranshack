@@ -1,0 +1,20 @@
+{
+  "status": "HACKATHON_FINAL_CANDIDATE",
+  "time_ns": 1790548015590838800,
+  "source_files": {
+    "MVP\\stages\\06_running_rails_from_contact\\src\\track_geometry.py": "de368ac243f0800f2406b1574595a58280f67692327e0230918cd2305a1685db",
+    "MVP\\stages\\06_running_rails_from_contact\\src\\rail_models.py": "07165fd58fc8f6cde52f1b72c9b3c6c596adae86aa9b444bef106e220e965bb6",
+    "MVP\\stages\\06_1_latent_contact_reference\\src\\curve_geometry.py": "3f57f33f6da380a569f0b15e4863760dc8570533a94290cf53f79b483e69dd1c",
+    "MVP\\stages\\06_1_latent_contact_reference\\src\\latent_inference.py": "e2f7695af7cc832e9bca6ca96d37570a6c817b5b21d4b3808638ea951ef3155d"
+  },
+  "files": {
+    "config.json": "3af2d35b759ef736bb4d6b6ce0fb50074e9892e4abf1ddcc7fe8868f5e5d42a1",
+    "README.md": "78396ae3b8a0baacf14a37f712d6c02f3a28ecac8bd5c136d8e5b60437d61f1a",
+    "VERIFICATION.json": "5e5b6d9ad0dbc6c62c7fc6962424de6ee325bf031e129fcfdff1e7239aba475a",
+    "src\\final_geometry.py": "88d89ea1a27e2b4a964c81bf40692aef0a24de56b7d86309a95cf3fdfa4727b5",
+    "src\\geometry_math.py": "15c5b2c352456b050723da7603a804c338abea751eff4ef15d7ed77322bf5a29",
+    "src\\rail_core.py": "d08c7fac93a44a5408abce4f8766bee67b334e44fb014e04d80290c8a814ec57",
+    "src\\seed_core.py": "d5542c2ada01f7bbd7c8c5eab6cbb2ff6103ad338f2effe9215ead90b9782e77",
+    "src\\smooth_core.py": "54dc5538dbaf4d1f53f7b40e20f1ebb43be8298d4d005207e1421035ef939b75"
+  }
+}

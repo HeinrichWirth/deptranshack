@@ -1,0 +1,1194 @@
+{
+  "time_ns": 1790537610104433400,
+  "status": "RESEARCH_ONLY_NOT_PRODUCTION",
+  "best": "LOSS_CAUCHY",
+  "selected": [
+    "LOSS_CAUCHY",
+    "XYZ_GENERIC_DIAGNOSTIC",
+    "C4_SMOOTH"
+  ],
+  "configs": [
+    {
+      "knots": 4,
+      "loss": "cauchy",
+      "prior": "all",
+      "smooth": 1.0,
+      "physics": true,
+      "vertical_prior": 0.004049456493920687,
+      "cluster": 0.25,
+      "profile": {
+        "representation": "pointset",
+        "fusion": "balanced",
+        "source_weight": "equal",
+        "loss": "cauchy",
+        "starts": 4
+      },
+      "name": "LOSS_CAUCHY",
+      "kind": "spline",
+      "use_profile": true,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011335873922976717,
+          "sigma_w": 0.025232541488953462,
+          "stations": 1364,
+          "runs": 9,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.026545838829127442,
+          "sigma_w": 0.04244736868760282,
+          "stations": 725,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.0353091222328171,
+          "sigma_w": 0.05346089854020834,
+          "stations": 232,
+          "runs": 6,
+          "fallback": false
+        }
+      ]
+    },
+    {
+      "knots": 4,
+      "loss": "huber",
+      "prior": "all",
+      "smooth": 1.0,
+      "physics": false,
+      "vertical_prior": 0.004049456493920687,
+      "cluster": 0.25,
+      "profile": {
+        "representation": "pointset",
+        "fusion": "balanced",
+        "source_weight": "equal",
+        "loss": "cauchy",
+        "starts": 4
+      },
+      "name": "XYZ_GENERIC_DIAGNOSTIC",
+      "kind": "spline",
+      "use_profile": false,
+      "generic_xyz": true,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.0112156718403081,
+          "sigma_w": 0.02568903893033399,
+          "stations": 1364,
+          "runs": 9,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.026615871860051744,
+          "sigma_w": 0.04197769358388437,
+          "stations": 725,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.028510474203172605,
+          "sigma_w": 0.05548240749603228,
+          "stations": 232,
+          "runs": 6,
+          "fallback": false
+        }
+      ]
+    },
+    {
+      "knots": 4,
+      "loss": "huber",
+      "prior": "all",
+      "smooth": 1.0,
+      "physics": false,
+      "vertical_prior": 0.004049456493920687,
+      "cluster": 0.25,
+      "profile": {
+        "representation": "pointset",
+        "fusion": "balanced",
+        "source_weight": "equal",
+        "loss": "cauchy",
+        "starts": 4
+      },
+      "name": "C4_SMOOTH",
+      "kind": "spline",
+      "use_profile": false,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011123148962186349,
+          "sigma_w": 0.025716386227095697,
+          "stations": 1364,
+          "runs": 9,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.02660910131631925,
+          "sigma_w": 0.04197502409943293,
+          "stations": 725,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.028408084894095742,
+          "sigma_w": 0.05552218891497338,
+          "stations": 232,
+          "runs": 6,
+          "fallback": false
+        }
+      ]
+    },
+    {
+      "knots": 4,
+      "loss": "huber",
+      "prior": "all",
+      "smooth": 1.0,
+      "physics": true,
+      "vertical_prior": 0.004049456493920687,
+      "cluster": 0.25,
+      "profile": {
+        "representation": "pointset",
+        "fusion": "balanced",
+        "source_weight": "equal",
+        "loss": "cauchy",
+        "starts": 4
+      },
+      "name": "C0_CURRENT",
+      "kind": "current",
+      "use_profile": false
+    }
+  ],
+  "producer": {
+    "latent_inference.py": "e2f7695af7cc832e9bca6ca96d37570a6c817b5b21d4b3808638ea951ef3155d",
+    "curve_geometry.py": "3f57f33f6da380a569f0b15e4863760dc8570533a94290cf53f79b483e69dd1c",
+    "profile_likelihood.py": "e5760e428153e89c2badbd715e5fc5d37d8c74cd58d23ea16b36da3357a591fa"
+  },
+  "baseline": "01ce9929f121badd219e35feead9623787f71d6f44c97716bca375c4b2af2acb",
+  "protocol": "165b2875e7e4a3b9954ff18dbef71249a13df58494b5aedc082b31453f011b36",
+  "phase_b_selection": "6e4f77ceec8b0df2e40ec42ee02b29c9d1129635eaa44ac2b5904710b17d22e5",
+  "calibration": "Development-only range-conditional anisotropic CR uncertainty floors. Existing STEP6 roll/offset state and corridor scale remain unchanged. Floors do not replace larger Hessian uncertainty.",
+  "loro_calibration": [
+    {
+      "method": "LOSS_CAUCHY",
+      "heldout_run": "new_data_part_01a1",
+      "n": 273,
+      "floor_only_coverage95": 0.73992673992674,
+      "floor_only_coverage99": 0.9267399267399268,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011128549081049925,
+          "sigma_w": 0.025157365855229614,
+          "stations": 1209,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.026871846611942307,
+          "sigma_w": 0.03536375775412507,
+          "stations": 646,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.03541745824162151,
+          "sigma_w": 0.05036919266009513,
+          "stations": 193,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "LOSS_CAUCHY",
+      "heldout_run": "new_data_part_01a2",
+      "n": 418,
+      "floor_only_coverage95": 0.8516746411483254,
+      "floor_only_coverage99": 0.9641148325358851,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011128549081049925,
+          "sigma_w": 0.025287108317324385,
+          "stations": 1146,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.026219831046312574,
+          "sigma_w": 0.03536375775412507,
+          "stations": 568,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.03541745824162151,
+          "sigma_w": 0.05036919266009513,
+          "stations": 189,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "LOSS_CAUCHY",
+      "heldout_run": "new_data_part_01c2",
+      "n": 223,
+      "floor_only_coverage95": 0.5426008968609866,
+      "floor_only_coverage99": 0.6771300448430493,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011128549081049925,
+          "sigma_w": 0.025157365855229614,
+          "stations": 1268,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.026219831046312574,
+          "sigma_w": 0.03536375775412507,
+          "stations": 632,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.03520078622401269,
+          "sigma_w": 0.05655260442032156,
+          "stations": 198,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "LOSS_CAUCHY",
+      "heldout_run": "new_data_part_01d1",
+      "n": 8,
+      "floor_only_coverage95": 1.0,
+      "floor_only_coverage99": 1.0,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011796338616014779,
+          "sigma_w": 0.025362283951048233,
+          "stations": 1356,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.026545838829127442,
+          "sigma_w": 0.04244736868760282,
+          "stations": 725,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.0353091222328171,
+          "sigma_w": 0.05346089854020834,
+          "stations": 232,
+          "runs": 6,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "LOSS_CAUCHY",
+      "heldout_run": "new_data_part_21",
+      "n": 181,
+      "floor_only_coverage95": 0.994475138121547,
+      "floor_only_coverage99": 1.0,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011796338616014779,
+          "sigma_w": 0.025362283951048233,
+          "stations": 1185,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.026871846611942307,
+          "sigma_w": 0.04953097962108057,
+          "stations": 723,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.0353091222328171,
+          "sigma_w": 0.05346089854020834,
+          "stations": 232,
+          "runs": 6,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "LOSS_CAUCHY",
+      "heldout_run": "new_data_part_22",
+      "n": 179,
+      "floor_only_coverage95": 0.9832402234636871,
+      "floor_only_coverage99": 1.0,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011796338616014779,
+          "sigma_w": 0.025362283951048233,
+          "stations": 1193,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.026871846611942307,
+          "sigma_w": 0.04953097962108057,
+          "stations": 717,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.0353091222328171,
+          "sigma_w": 0.05346089854020834,
+          "stations": 232,
+          "runs": 6,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "LOSS_CAUCHY",
+      "heldout_run": "doubleT_platform",
+      "n": 430,
+      "floor_only_coverage95": 0.9651162790697675,
+      "floor_only_coverage99": 0.9883720930232558,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011589013774087987,
+          "sigma_w": 0.025362283951048233,
+          "stations": 1151,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.026219831046312574,
+          "sigma_w": 0.04953097962108057,
+          "stations": 555,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.03520078622401269,
+          "sigma_w": 0.05655260442032156,
+          "stations": 185,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "LOSS_CAUCHY",
+      "heldout_run": "roundT_doubleT",
+      "n": 252,
+      "floor_only_coverage95": 0.9603174603174603,
+      "floor_only_coverage99": 1.0,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011796338616014779,
+          "sigma_w": 0.025157365855229614,
+          "stations": 1246,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.026219831046312574,
+          "sigma_w": 0.04953097962108057,
+          "stations": 630,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.03541745824162151,
+          "sigma_w": 0.05655260442032156,
+          "stations": 193,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "LOSS_CAUCHY",
+      "heldout_run": "roundT_pressureGate_roundT",
+      "n": 357,
+      "floor_only_coverage95": 0.6386554621848739,
+      "floor_only_coverage99": 0.8123249299719888,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011128549081049925,
+          "sigma_w": 0.025157365855229614,
+          "stations": 1158,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.026871846611942307,
+          "sigma_w": 0.03536375775412507,
+          "stations": 604,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.03520078622401269,
+          "sigma_w": 0.05036919266009513,
+          "stations": 202,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "XYZ_GENERIC_DIAGNOSTIC",
+      "heldout_run": "new_data_part_01a1",
+      "n": 273,
+      "floor_only_coverage95": 0.7472527472527473,
+      "floor_only_coverage99": 0.9230769230769231,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011050995012789267,
+          "sigma_w": 0.02430910899507289,
+          "stations": 1209,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.028027740472643087,
+          "sigma_w": 0.03456897525837509,
+          "stations": 646,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.034873473599203605,
+          "sigma_w": 0.05413150503268945,
+          "stations": 193,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "XYZ_GENERIC_DIAGNOSTIC",
+      "heldout_run": "new_data_part_01a2",
+      "n": 418,
+      "floor_only_coverage95": 0.8325358851674641,
+      "floor_only_coverage99": 0.9521531100478469,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011420432137865609,
+          "sigma_w": 0.02430910899507289,
+          "stations": 1146,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.0252040032474604,
+          "sigma_w": 0.03456897525837509,
+          "stations": 568,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.034873473599203605,
+          "sigma_w": 0.05413150503268945,
+          "stations": 189,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "XYZ_GENERIC_DIAGNOSTIC",
+      "heldout_run": "new_data_part_01c2",
+      "n": 223,
+      "floor_only_coverage95": 0.47085201793721976,
+      "floor_only_coverage99": 0.6367713004484304,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011050995012789267,
+          "sigma_w": 0.02430910899507289,
+          "stations": 1268,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.0252040032474604,
+          "sigma_w": 0.03456897525837509,
+          "stations": 632,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.022147474807141604,
+          "sigma_w": 0.05683330995937511,
+          "stations": 198,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "XYZ_GENERIC_DIAGNOSTIC",
+      "heldout_run": "new_data_part_01d1",
+      "n": 8,
+      "floor_only_coverage95": 0.75,
+      "floor_only_coverage99": 0.875,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011050995012789267,
+          "sigma_w": 0.026093730757705075,
+          "stations": 1356,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.026615871860051744,
+          "sigma_w": 0.04197769358388437,
+          "stations": 725,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.028510474203172605,
+          "sigma_w": 0.05548240749603228,
+          "stations": 232,
+          "runs": 6,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "XYZ_GENERIC_DIAGNOSTIC",
+      "heldout_run": "new_data_part_21",
+      "n": 181,
+      "floor_only_coverage95": 0.9613259668508287,
+      "floor_only_coverage99": 1.0,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011420432137865609,
+          "sigma_w": 0.026093730757705075,
+          "stations": 1185,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.028027740472643087,
+          "sigma_w": 0.049386411909393656,
+          "stations": 723,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.028510474203172605,
+          "sigma_w": 0.05548240749603228,
+          "stations": 232,
+          "runs": 6,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "XYZ_GENERIC_DIAGNOSTIC",
+      "heldout_run": "new_data_part_22",
+      "n": 179,
+      "floor_only_coverage95": 0.994413407821229,
+      "floor_only_coverage99": 1.0,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011420432137865609,
+          "sigma_w": 0.026093730757705075,
+          "stations": 1193,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.028027740472643087,
+          "sigma_w": 0.049386411909393656,
+          "stations": 717,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.028510474203172605,
+          "sigma_w": 0.05548240749603228,
+          "stations": 232,
+          "runs": 6,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "XYZ_GENERIC_DIAGNOSTIC",
+      "heldout_run": "doubleT_platform",
+      "n": 430,
+      "floor_only_coverage95": 0.9395348837209302,
+      "floor_only_coverage99": 0.9744186046511628,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011420432137865609,
+          "sigma_w": 0.026093730757705075,
+          "stations": 1151,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.0252040032474604,
+          "sigma_w": 0.049386411909393656,
+          "stations": 555,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.022147474807141604,
+          "sigma_w": 0.05683330995937511,
+          "stations": 185,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "XYZ_GENERIC_DIAGNOSTIC",
+      "heldout_run": "roundT_doubleT",
+      "n": 252,
+      "floor_only_coverage95": 0.8134920634920635,
+      "floor_only_coverage99": 0.9642857142857143,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011255755310346775,
+          "sigma_w": 0.024713800822443975,
+          "stations": 1246,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.028027740472643087,
+          "sigma_w": 0.049386411909393656,
+          "stations": 630,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.022147474807141604,
+          "sigma_w": 0.05683330995937511,
+          "stations": 193,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "XYZ_GENERIC_DIAGNOSTIC",
+      "heldout_run": "roundT_pressureGate_roundT",
+      "n": 357,
+      "floor_only_coverage95": 0.6218487394957983,
+      "floor_only_coverage99": 0.8179271708683473,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011050995012789267,
+          "sigma_w": 0.02430910899507289,
+          "stations": 1158,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.0252040032474604,
+          "sigma_w": 0.03456897525837509,
+          "stations": 604,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.034873473599203605,
+          "sigma_w": 0.05413150503268945,
+          "stations": 202,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "C4_SMOOTH",
+      "heldout_run": "new_data_part_01a1",
+      "n": 273,
+      "floor_only_coverage95": 0.7472527472527473,
+      "floor_only_coverage99": 0.9194139194139194,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011003114097000874,
+          "sigma_w": 0.024306001800908854,
+          "stations": 1209,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.02803917891687265,
+          "sigma_w": 0.03456897525837509,
+          "stations": 646,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.03468556202138617,
+          "sigma_w": 0.054230029697311236,
+          "stations": 193,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "C4_SMOOTH",
+      "heldout_run": "new_data_part_01a2",
+      "n": 418,
+      "floor_only_coverage95": 0.8301435406698564,
+      "floor_only_coverage99": 0.9521531100478469,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011379646717105792,
+          "sigma_w": 0.024306001800908854,
+          "stations": 1146,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.025179023715765858,
+          "sigma_w": 0.03456897525837509,
+          "stations": 568,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.03468556202138617,
+          "sigma_w": 0.054230029697311236,
+          "stations": 189,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "C4_SMOOTH",
+      "heldout_run": "new_data_part_01c2",
+      "n": 223,
+      "floor_only_coverage95": 0.4663677130044843,
+      "floor_only_coverage99": 0.6367713004484304,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011003114097000874,
+          "sigma_w": 0.024306001800908854,
+          "stations": 1268,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.025179023715765858,
+          "sigma_w": 0.03456897525837509,
+          "stations": 632,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.022130607766805317,
+          "sigma_w": 0.05681434813263553,
+          "stations": 198,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "C4_SMOOTH",
+      "heldout_run": "new_data_part_01d1",
+      "n": 8,
+      "floor_only_coverage95": 0.75,
+      "floor_only_coverage99": 0.875,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011003114097000874,
+          "sigma_w": 0.026108362029199368,
+          "stations": 1356,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.02660910131631925,
+          "sigma_w": 0.04197502409943293,
+          "stations": 725,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.028408084894095742,
+          "sigma_w": 0.05552218891497338,
+          "stations": 232,
+          "runs": 6,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "C4_SMOOTH",
+      "heldout_run": "new_data_part_21",
+      "n": 181,
+      "floor_only_coverage95": 0.9613259668508287,
+      "floor_only_coverage99": 1.0,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011379646717105792,
+          "sigma_w": 0.026108362029199368,
+          "stations": 1185,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.02803917891687265,
+          "sigma_w": 0.04938107294049077,
+          "stations": 723,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.028408084894095742,
+          "sigma_w": 0.05552218891497338,
+          "stations": 232,
+          "runs": 6,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "C4_SMOOTH",
+      "heldout_run": "new_data_part_22",
+      "n": 179,
+      "floor_only_coverage95": 0.994413407821229,
+      "floor_only_coverage99": 1.0,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011379646717105792,
+          "sigma_w": 0.026108362029199368,
+          "stations": 1193,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.02803917891687265,
+          "sigma_w": 0.04938107294049077,
+          "stations": 717,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.028408084894095742,
+          "sigma_w": 0.05552218891497338,
+          "stations": 232,
+          "runs": 6,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "C4_SMOOTH",
+      "heldout_run": "doubleT_platform",
+      "n": 430,
+      "floor_only_coverage95": 0.9395348837209302,
+      "floor_only_coverage99": 0.9744186046511628,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011379646717105792,
+          "sigma_w": 0.026108362029199368,
+          "stations": 1151,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.025179023715765858,
+          "sigma_w": 0.04938107294049077,
+          "stations": 555,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.022130607766805317,
+          "sigma_w": 0.05681434813263553,
+          "stations": 185,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "C4_SMOOTH",
+      "heldout_run": "roundT_doubleT",
+      "n": 252,
+      "floor_only_coverage95": 0.8134920634920635,
+      "floor_only_coverage99": 0.9682539682539683,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011259611851920315,
+          "sigma_w": 0.024697977603012525,
+          "stations": 1246,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.02803917891687265,
+          "sigma_w": 0.04938107294049077,
+          "stations": 630,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.022130607766805317,
+          "sigma_w": 0.05681434813263553,
+          "stations": 193,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    },
+    {
+      "method": "C4_SMOOTH",
+      "heldout_run": "roundT_pressureGate_roundT",
+      "n": 357,
+      "floor_only_coverage95": 0.6246498599439776,
+      "floor_only_coverage99": 0.8179271708683473,
+      "calibration": [
+        {
+          "lo": 0,
+          "hi": 30,
+          "sigma_v": 0.011003114097000874,
+          "sigma_w": 0.024306001800908854,
+          "stations": 1158,
+          "runs": 8,
+          "fallback": false
+        },
+        {
+          "lo": 30,
+          "hi": 60,
+          "sigma_v": 0.025179023715765858,
+          "sigma_w": 0.03456897525837509,
+          "stations": 604,
+          "runs": 7,
+          "fallback": false
+        },
+        {
+          "lo": 60,
+          "hi": 1000,
+          "sigma_v": 0.03468556202138617,
+          "sigma_w": 0.054230029697311236,
+          "stations": 202,
+          "runs": 5,
+          "fallback": false
+        }
+      ],
+      "note": "Floor-only diagnostic; actual covariance also includes per-profile Hessian and competing modes. No benchmark residuals used."
+    }
+  ],
+  "benchmark_runs": [
+    "roundT_squareT_pressureGate_squareT",
+    "squareT_platform_squareT_switch"
+  ],
+  "benchmark_starts": 1422,
+  "benchmark_used_for_selection": false,
+  "benchmark_already_used_in_previous_research": true,
+  "fresh_holdout_consumed": false
+}

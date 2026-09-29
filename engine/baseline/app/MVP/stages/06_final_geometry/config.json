@@ -1,0 +1,56 @@
+{
+  "status": "HACKATHON_FINAL_CANDIDATE",
+  "method": "C4_SMOOTH + B4_SPLINE_50__O1",
+  "curve": {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": false,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "name": "C4_SMOOTH",
+    "kind": "spline",
+    "use_profile": false,
+    "calibration": [
+      {
+        "lo": 0,
+        "hi": 30,
+        "sigma_v": 0.011123148962186349,
+        "sigma_w": 0.025716386227095697,
+        "stations": 1364,
+        "runs": 9,
+        "fallback": false
+      },
+      {
+        "lo": 30,
+        "hi": 60,
+        "sigma_v": 0.02660910131631925,
+        "sigma_w": 0.04197502409943293,
+        "stations": 725,
+        "runs": 8,
+        "fallback": false
+      },
+      {
+        "lo": 60,
+        "hi": 1000,
+        "sigma_v": 0.028408084894095742,
+        "sigma_w": 0.05552218891497338,
+        "stations": 232,
+        "runs": 6,
+        "fallback": false
+      }
+    ]
+  },
+  "rails": {
+    "family": "spline",
+    "roll_q_deg_sqrt_m": 0.1,
+    "offset_q_m_sqrt_m": 0.001,
+    "slope_scale": 1.0,
+    "damping_m": 50.0,
+    "offset_model": "O1",
+    "corridor_scale": 1.0,
+    "parent": "B4_SPLINE_50",
+    "offset_ablation": true
+  }
+}

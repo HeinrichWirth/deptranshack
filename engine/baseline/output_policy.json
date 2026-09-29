@@ -1,0 +1,7 @@
+{
+  "export_las": false,
+  "keep_prediction_arrays": true,
+  "keep_point_provenance": true,
+  "keep_timing_and_pose_logs": true,
+  "note": "User preference: do not generate LAS during Docker pipeline runs. LAS restoration/export is a separate explicitly requested operation."
+}

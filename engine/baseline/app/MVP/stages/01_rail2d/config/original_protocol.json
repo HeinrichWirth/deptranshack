@@ -1,0 +1,80 @@
+{
+  "version": 1,
+  "split": {
+    "development": [
+      "new_data_part_01a1",
+      "new_data_part_01a2",
+      "new_data_part_01c2",
+      "new_data_part_01d1",
+      "new_data_part_21",
+      "new_data_part_22",
+      "doubleT_platform",
+      "roundT_doubleT",
+      "roundT_pressureGate_roundT"
+    ],
+    "validation": [
+      "roundT_squareT_pressureGate_squareT",
+      "squareT_platform_squareT_switch"
+    ]
+  },
+  "split_note": "Related new_data parts remain together. Previous experiment calibration becomes development. Final two independent runs held out from all new tuning; historically inspected, not prospective.",
+  "primary_method": "NEXT_POSE",
+  "primary_length_m": 8,
+  "lengths_m": [
+    2,
+    4,
+    6,
+    8,
+    10,
+    12,
+    16
+  ],
+  "bin_sizes_m": [
+    0.005,
+    0.01,
+    0.02,
+    0.03,
+    0.05
+  ],
+  "kernel_sizes_m": [
+    0.025,
+    0.04,
+    0.06
+  ],
+  "gt_definition": "Unique class-1 points, robust 2-medians lateral; each center median v and q75 w. Median, q90 and detrended upper line are diagnostics only. Fixed before detector comparisons.",
+  "minimum_gt_unique_per_rail": 6,
+  "side_convention": "L means lower v; R higher v, matching requested equations. For sensor forward -Y, lateral is +X, which viewer calls physical left: L/R naming here is algebraic, not vehicle-side truth.",
+  "tuning_frames": "At most 80 evenly spaced frames per development run; no validation samples.",
+  "tuning_objective": "run-equal p95 max(left,right) 2D error; absent supported pair scored as 1m loss, missing GT retained in coverage but not numerical loss",
+  "confidence_selection": "development 5th percentile among supported primary 8m proposed predictions; target ~95% of supported predictions, not guaranteed final coverage",
+  "gap_limit_seconds": 0.3,
+  "pose_jump_limit_m": 5,
+  "velocity_limit_m_s": 50,
+  "minimum_displacement_m": 0.01,
+  "curvature_bins_inv_m": [
+    0,
+    0.0002,
+    0.001
+  ],
+  "curvature_source": "prior offline class-1 centerline only, evaluation after predictions; never detector input",
+  "scene_annotations": "platform/switch/tunnel infrastructure are not per-frame semantic labels; do not infer truth from folder names",
+  "default": {
+    "bin_m": 0.02,
+    "kernel_m": 0.04,
+    "gauge_m": 1.56,
+    "height_m": -1.0,
+    "vmin": -1.4,
+    "vmax": 1.4,
+    "wmin": -1.35,
+    "wmax": -0.65,
+    "center_max": 0.3,
+    "gauge_soft": [
+      1.48,
+      1.62
+    ],
+    "cant_max": 0.18,
+    "min_support": 6,
+    "confidence_threshold": 0.0,
+    "head_quantile": 0.75
+  }
+}

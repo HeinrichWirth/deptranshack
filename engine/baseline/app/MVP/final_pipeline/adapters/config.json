@@ -1,0 +1,21 @@
+{
+  "version": "STEP1_TO_STEP6_SEED_ADAPTER_v1",
+  "evidence": "frozen STEP1 accepted surface_support current T",
+  "section_m": 1,
+  "seed_length_m": 8,
+  "upper_quantile": 0.7,
+  "min_unique_points": 5,
+  "min_upper_points": 3,
+  "min_sections": 2,
+  "new_detector": false,
+  "annotation_labels": false,
+  "future_clouds": false,
+  "tuning_on_benchmark": false,
+  "gate_before_benchmark": {
+    "maximum_pooled_far_p95_degradation_each_bin_m": 0.01,
+    "additional_far_gt20cm_starts_fraction_max": 0.01,
+    "additional_far_gt50cm_starts_max": 0,
+    "availability_loss_percentage_points_max": 2,
+    "note": "Engineering acceptance criterion chosen before RAW downstream evaluation; report absolute counts and matched support too."
+  }
+}

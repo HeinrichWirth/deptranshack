@@ -1,0 +1,5 @@
+{
+  "data_root": "C:/Users/heinrich.wirth/deptrans/output/LAS_FRAMES_CLASSIFIED_20260926/ANNOTATED",
+  "reason": "Original classified dataset containing the development and held-out recordings explicitly named in the supplied STEP 5 request.",
+  "not_used": "The later automatically classified dataset lacks both named held-out runs; no silent replacement of the outer split."
+}

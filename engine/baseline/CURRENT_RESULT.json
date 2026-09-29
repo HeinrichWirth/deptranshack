@@ -1,0 +1,19 @@
+{
+  "solves": 373,
+  "pose_limit": "next retained pose, original T+2; no future cloud",
+  "wall_seconds": 151.11492900599842,
+  "viewer_extension_m": 20,
+  "old_10hz_las_deleted": true,
+  "input_stride": 2,
+  "viewer": "http://127.0.0.1:8768/predicted_train.html",
+  "frames": 755,
+  "las": "results_copy_main_5hz_train_las",
+  "solve_offset": 1,
+  "history": "12 retained frames T-11..T, up to 2.2 s",
+  "viewer_run_id": "COPY_MAIN_5HZ_SOLVE2",
+  "run": "INPUT5HZ_SOLVE2_REPLAY",
+  "results": "COPY_MAIN/results/INPUT5HZ_SOLVE2_REPLAY",
+  "available": 370,
+  "solve_stride": 2,
+  "input_hz": 5
+}

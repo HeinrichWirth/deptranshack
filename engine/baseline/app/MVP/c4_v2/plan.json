@@ -1,0 +1,11 @@
+{
+  "reference": "MVP.performance_final2.engine:Engine(native_batch_spatial)",
+  "development": ["roundT_squareT_pressureGate_squareT", "roundT_pressureGate_roundT", "squareT_platform_squareT_switch", "new_data_part_01a2", "new_data_part_01d1"],
+  "benchmark": ["doubleT_platform", "new_data_part_01a1", "new_data_part_01c2", "new_data_part_21", "new_data_part_22", "roundT_doubleT"],
+  "ranges_m": [[30,50],[50,75],[75,100]],
+  "gates": {"far_p95_increase_m": 0.01, "additional_starts_over_20cm": 1, "additional_starts_over_50cm": 0, "new_wrong_side": 0, "new_crossings": 0, "coverage_loss_percentage_points": 2, "availability_loss_percentage_points": 0, "median_horizon_loss_m": 2, "p90_horizon_loss_m": 2},
+  "search": {"repair_m": [4,6,8,12], "overlap_m": [4,8,12], "lm_iterations": [4,6,8,12], "grid_sizes": [5,7,9], "threads": [1,2,4,8,16]},
+  "normal_update_targets_ms": {"target": 100, "good": 150, "acceptable": 250},
+  "selection": "development only; chronological state from first frame; benchmark never tunes",
+  "evaluation": "same post-inference GT planes; missing coverage reported separately; labels forbidden in inference"
+}

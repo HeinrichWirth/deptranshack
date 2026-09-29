@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-29",
+  "source_files_verified": 416,
+  "cross_build": {
+    "cases": 317,
+    "all_exact": true
+  },
+  "envelope": {
+    "pass_": true,
+    "frames": 356,
+    "all_source_point_indices_exact": true,
+    "sha256": "3f116f3fa67c860b9b93c31225a2db8235d0d380ade861b1a94ddd3391da81fb"
+  },
+  "web_run": {
+    "job": "a36dfd7eb2d541afa1cf4209f4462828",
+    "pass_": true,
+    "received": 1510,
+    "processed": 390,
+    "live_slice_seen": true,
+    "temporary_input_removed": true,
+    "raw_tracks": 19,
+    "confirmed": 12
+  },
+  "ui": {
+    "pass": true,
+    "job": "00000000000000000000000000000079",
+    "errors": []
+  },
+  "automatic_grouping": {
+    "radius_m": 10,
+    "accepted_run_confirmed": 9,
+    "web_run_confirmed": 9,
+    "pairs_3_4_and_10_11_merged": true
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "name": "COPY_MAIN",
+  "status": "qualified_exact_on_ros2_test_recording",
+  "source_version": "geometry_pipeline_v1.0.0",
+  "workers": 2,
+  "candidate_threads": 2,
+  "icp_query_workers": 1,
+  "registration_acceleration": "parallel",
+  "voxel": "packed",
+  "export_las": false,
+  "diagnostics_during_replay": "local Linux filesystem",
+  "export_after_replay": "compressed archive to Windows",
+  "input_sha256": "73ee5bfc2087bb160267110563b298a9629ac9e3df1459d857ec72ce1ef89d60",
+  "selected_on": "same first 400 frames, causal fresh registration, no annotation labels; balanced throughput and publication count"
+}

@@ -1,0 +1,78 @@
+{
+  "scope": "minimal production dependency including tests and geometry-only fixtures",
+  "primary": "F4-NU",
+  "version": "1.0.0-confidence-pre-guard.1",
+  "files": [
+    {
+      "path": "contact_rail_step2/__init__.py",
+      "bytes": 236,
+      "sha256": "4e72454b8ab0fdcc946fced844d011ff67f6f29e0b792f9b9c2f7f32f43d40bd"
+    },
+    {
+      "path": "contact_rail_step2/canonical_template.npz",
+      "bytes": 262510,
+      "sha256": "3489fb5f0e7042e7c022eb13d88cc28163f4d2f28f32d2b1ebdf9c05a694ef0e"
+    },
+    {
+      "path": "contact_rail_step2/config.json",
+      "bytes": 724,
+      "sha256": "729b43d66a13dcfebf6d6a2ad565eafdf14a54c9fd517c93aec759d8e3b798fa"
+    },
+    {
+      "path": "contact_rail_step2/detector.py",
+      "bytes": 11666,
+      "sha256": "dd60d32c707635442e9e4b56dc84e7078d181b538fda8595351c27f5f32eef02"
+    },
+    {
+      "path": "freeze.json",
+      "bytes": 1645,
+      "sha256": "bd197b84283e98d643e054009e7ef81c923915324e06998818eaf9012bf1ff8a"
+    },
+    {
+      "path": "README.md",
+      "bytes": 6209,
+      "sha256": "7753d9bdfec021978bbc547e09b3100b7c5d20a1c84ae846a02e77de3ddb4480"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 29,
+      "sha256": "57e74730633249faccf68cf27f4ffd05df5bffb1245dee9b36acce5e4c48019f"
+    },
+    {
+      "path": "tests/fixtures/bilateral_occlusion.npz",
+      "bytes": 854070,
+      "sha256": "8cb9072c68e4a13816c36a058cb7315fcbe8a50db1ff039b4734f2a706c3e624"
+    },
+    {
+      "path": "tests/fixtures/expected.json",
+      "bytes": 624,
+      "sha256": "d8d8e1e3c025f436b0710d595c1fa26aee7a3f639beb48a9838ddc6f54c6dfeb"
+    },
+    {
+      "path": "tests/fixtures/ordinary_profile.npz",
+      "bytes": 1440881,
+      "sha256": "114af586ae7542b680a92ce94acaefc36d57501dd930d1dac44c683f1da87cd7"
+    },
+    {
+      "path": "tests/test_api_fixtures.py",
+      "bytes": 2476,
+      "sha256": "16383b48e9601309025654d7a73079beaa4025618f2cd9cb4780fcec0cc31c3a"
+    },
+    {
+      "path": "tests/test_confidence.py",
+      "bytes": 4409,
+      "sha256": "110c9dcc6aab63f81dfeff3ddd2b3c4c944ca8b3c3f6d58e194d2ada89be6ae3"
+    },
+    {
+      "path": "VERSION",
+      "bytes": 30,
+      "sha256": "e757161391fe739fd144d05a7da6f61c06d7139444d8124e2790c2a8f2e896c3"
+    }
+  ],
+  "excludes": [
+    "self MANIFEST.json",
+    "chunks/ (resumable copies; aggregated rows included)",
+    "__pycache__/",
+    "audit/finalize.log (active output)"
+  ]
+}

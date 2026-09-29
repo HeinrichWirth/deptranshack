@@ -1,0 +1,220 @@
+{
+  "matched": true,
+  "cases": 40,
+  "max_difference": 0.0,
+  "pure_prediction_ms": {
+    "n": 40,
+    "p0": 5.406099837273359,
+    "p50": 32.68935019150376,
+    "p90": 51.65044013410807,
+    "p95": 54.18218029662967,
+    "p99": 54.46091825608164,
+    "p100": 54.56770025193691
+  },
+  "includes_C4_marching": false,
+  "includes_LAS_IO": false,
+  "labels_rejected": true,
+  "future_rejected": true,
+  "rows": [
+    {
+      "run": "new_data_part_01a1",
+      "frame": 330,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01a2",
+      "frame": 285,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01c2",
+      "frame": 777,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01d1",
+      "frame": 555,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_21",
+      "frame": 118,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_22",
+      "frame": 106,
+      "max_difference": 0.0
+    },
+    {
+      "run": "doubleT_platform",
+      "frame": 95,
+      "max_difference": 0.0
+    },
+    {
+      "run": "roundT_doubleT",
+      "frame": 45,
+      "max_difference": 0.0
+    },
+    {
+      "run": "roundT_pressureGate_roundT",
+      "frame": 169,
+      "max_difference": 0.0
+    },
+    {
+      "run": "doubleT_platform",
+      "frame": 31,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01c2",
+      "frame": 621,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01c2",
+      "frame": 233,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01a1",
+      "frame": 998,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01c2",
+      "frame": 699,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01d1",
+      "frame": 643,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_21",
+      "frame": 130,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01c2",
+      "frame": 77,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01a1",
+      "frame": 246,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_21",
+      "frame": 59,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01a2",
+      "frame": 343,
+      "max_difference": 0.0
+    },
+    {
+      "run": "roundT_doubleT",
+      "frame": 0,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01a2",
+      "frame": 0,
+      "max_difference": 0.0
+    },
+    {
+      "run": "roundT_pressureGate_roundT",
+      "frame": 217,
+      "max_difference": 0.0
+    },
+    {
+      "run": "roundT_doubleT",
+      "frame": 181,
+      "max_difference": 0.0
+    },
+    {
+      "run": "roundT_pressureGate_roundT",
+      "frame": 241,
+      "max_difference": 0.0
+    },
+    {
+      "run": "roundT_pressureGate_roundT",
+      "frame": 96,
+      "max_difference": 0.0
+    },
+    {
+      "run": "roundT_doubleT",
+      "frame": 250,
+      "max_difference": 0.0
+    },
+    {
+      "run": "roundT_doubleT",
+      "frame": 204,
+      "max_difference": 0.0
+    },
+    {
+      "run": "roundT_doubleT",
+      "frame": 22,
+      "max_difference": 0.0
+    },
+    {
+      "run": "doubleT_platform",
+      "frame": 79,
+      "max_difference": 0.0
+    },
+    {
+      "run": "doubleT_platform",
+      "frame": 111,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01a1",
+      "frame": 413,
+      "max_difference": 0.0
+    },
+    {
+      "run": "roundT_pressureGate_roundT",
+      "frame": 72,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01c2",
+      "frame": 466,
+      "max_difference": 0.0
+    },
+    {
+      "run": "doubleT_platform",
+      "frame": 143,
+      "max_difference": 0.0
+    },
+    {
+      "run": "doubleT_platform",
+      "frame": 63,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01a2",
+      "frame": 400,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01a2",
+      "frame": 457,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01c2",
+      "frame": 388,
+      "max_difference": 0.0
+    },
+    {
+      "run": "new_data_part_01a2",
+      "frame": 630,
+      "max_difference": 0.0
+    }
+  ]
+}

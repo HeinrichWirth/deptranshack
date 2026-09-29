@@ -1,0 +1,17 @@
+{
+  "source": "COPY_MAIN_3HZ_GUARDED",
+  "status": "ACCEPTED_FROZEN",
+  "baseline_files_verified": 403,
+  "config_byte_identical": true,
+  "paired_windows": 317,
+  "all_prediction_arrays_exact": true,
+  "runtime_changes": [
+    "8 native candidate threads instead of 2",
+    "instance-local exact float64 vector cross",
+    "parallel immutable frame index construction",
+    "independent near-rail refresh overlaps geometry"
+  ],
+  "goal_200ms_full_cycle": false,
+  "quality_full_replay_identical": false,
+  "acceptance_manifest": "ACCEPTED_FREEZE.json"
+}

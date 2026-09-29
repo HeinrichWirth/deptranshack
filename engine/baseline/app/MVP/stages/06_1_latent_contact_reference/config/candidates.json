@@ -1,0 +1,631 @@
+[
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "C0_CURRENT",
+    "kind": "current",
+    "use_profile": false
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.0,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "C1_POLYLINE",
+    "kind": "polyline",
+    "use_profile": false
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.0,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "C2_PCHIP",
+    "kind": "pchip",
+    "use_profile": false
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.0,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "C3_HERMITE",
+    "kind": "hermite",
+    "use_profile": false
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": false,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "C4_SMOOTH",
+    "kind": "spline",
+    "use_profile": false
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "C5_PHYSICAL",
+    "kind": "spline",
+    "use_profile": false
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "P1_HARD_PROJECTION",
+    "kind": "spline",
+    "use_profile": false,
+    "hard_projection": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "none",
+    "smooth": 1.0,
+    "physics": false,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "P2_PROFILE_WEAK",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": false,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "T1_LATENT_SMOOTH",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "T1_LATENT_PHYSICAL",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "C6_FACTOR_GRAPH",
+    "kind": "graph",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "C7_JOINT_EM",
+    "kind": "joint",
+    "use_profile": true
+  },
+  {
+    "knots": 1,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "KNOT_1",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 2,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "KNOT_2",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 6,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "KNOT_6",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 8,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "KNOT_8",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "cauchy",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "LOSS_CAUCHY",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "tukey",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "LOSS_TUKEY",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "student",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "LOSS_STUDENT",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "none",
+    "smooth": 1.0,
+    "physics": false,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "PRIOR_NONE",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "kappa",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "PRIOR_KAPPA",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "kappa_prime",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "PRIOR_KAPPA_PRIME",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "vertical",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "PRIOR_VERTICAL",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.1,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "CLUSTER_0.1",
+    "kind": "spline",
+    "use_profile": false
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.5,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "CLUSTER_0.5",
+    "kind": "spline",
+    "use_profile": false
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "occupancy",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "PROFILE_OCCUPANCY",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "envelope",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "PROFILE_ENVELOPE",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "subsets",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "PROFILE_SUBSETS",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "concat",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "FUSION_CONCAT",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "current",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "FUSION_CURRENT",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "quality",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "SOURCE_QUALITY",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": true,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "robust",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "SOURCE_ROBUST",
+    "kind": "spline",
+    "use_profile": true
+  },
+  {
+    "knots": 4,
+    "loss": "huber",
+    "prior": "all",
+    "smooth": 1.0,
+    "physics": false,
+    "vertical_prior": 0.004049456493920687,
+    "cluster": 0.25,
+    "profile": {
+      "representation": "pointset",
+      "fusion": "balanced",
+      "source_weight": "equal",
+      "loss": "cauchy",
+      "starts": 4
+    },
+    "name": "XYZ_GENERIC_DIAGNOSTIC",
+    "kind": "spline",
+    "use_profile": false,
+    "generic_xyz": true
+  }
+]

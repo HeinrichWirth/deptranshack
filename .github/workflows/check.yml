@@ -1,0 +1,13 @@
+name: Build and verify
+on: [push, pull_request]
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build from source
+        run: docker build -t rail-inspector:test .
+      - name: Verify source freeze and contracts
+        run: docker run --rm --entrypoint python rail-inspector:test -m unittest discover -s tests -v
+      - name: Check browser scripts
+        run: for file in web/*.js web/viewer/*.js; do node --check "$file"; done

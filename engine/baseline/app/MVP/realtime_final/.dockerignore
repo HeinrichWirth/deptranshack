@@ -1,0 +1,5 @@
+native/build
+native/clang
+**/__pycache__
+**/*.pyd
+*.log

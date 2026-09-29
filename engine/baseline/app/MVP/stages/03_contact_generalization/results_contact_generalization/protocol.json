@@ -1,0 +1,336 @@
+{
+  "slab_m": 8,
+  "outer_split": {
+    "development": [
+      "new_data_part_01a1",
+      "new_data_part_01a2",
+      "new_data_part_01c2",
+      "new_data_part_01d1",
+      "new_data_part_21",
+      "new_data_part_22",
+      "doubleT_platform",
+      "roundT_doubleT",
+      "roundT_pressureGate_roundT"
+    ],
+    "validation": [
+      "roundT_squareT_pressureGate_squareT",
+      "squareT_platform_squareT_switch"
+    ]
+  },
+  "template_fit_runs": [
+    "new_data_part_01a1",
+    "new_data_part_01c2",
+    "new_data_part_01d1",
+    "new_data_part_21",
+    "doubleT_platform",
+    "roundT_pressureGate_roundT"
+  ],
+  "inner_validation_runs": [
+    "new_data_part_01a2",
+    "new_data_part_22",
+    "roundT_doubleT"
+  ],
+  "gt": "Frozen STEP2 median/MAD definition; original full 8m labels, unchanged under perturbations",
+  "step1": "Original full-cloud detected pair and motion axes held fixed; conditional STEP2 robustness only",
+  "seed": 260926,
+  "azimuth": "Unique bearing rounded to 1e-5 rad, sorted within ring on full frame before crop; ordinal modulo factor, phase 0",
+  "dropout": "Unique XYZ observations share a deterministic random draw, duplicated returns retained or removed together",
+  "cache_envelope_d": [
+    -0.1,
+    2
+  ],
+  "cache_envelope_h": [
+    -1,
+    1.5
+  ],
+  "evaluation": "All 6551 original frames. Each random retention: all 1422 held-out frames + 24 per development run. Each structured/noise shift: 96 evenly spaced frames per held-out run + 12 per development run. Original comparisons also restricted to matching cohorts.",
+  "scenarios": [
+    {
+      "name": "original",
+      "retain": 1.0,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.0,
+      "noise_type": "xyz"
+    },
+    {
+      "name": "random_0.75",
+      "retain": 0.75,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "random_0.5",
+      "retain": 0.5,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "random_0.25",
+      "retain": 0.25,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "random_0.125",
+      "retain": 0.125,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "random_0.0625",
+      "retain": 0.0625,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "ring_2",
+      "retain": 1.0,
+      "ring": 2,
+      "azimuth": 1,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "ring_4",
+      "retain": 1.0,
+      "ring": 4,
+      "azimuth": 1,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "ring_8",
+      "retain": 1.0,
+      "ring": 8,
+      "azimuth": 1,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "azimuth_2",
+      "retain": 1.0,
+      "ring": 1,
+      "azimuth": 2,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "azimuth_4",
+      "retain": 1.0,
+      "ring": 1,
+      "azimuth": 4,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "azimuth_8",
+      "retain": 1.0,
+      "ring": 1,
+      "azimuth": 8,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "ring_2_azimuth_2",
+      "retain": 1.0,
+      "ring": 2,
+      "azimuth": 2,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "ring_2_azimuth_4",
+      "retain": 1.0,
+      "ring": 2,
+      "azimuth": 4,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "ring_4_azimuth_2",
+      "retain": 1.0,
+      "ring": 4,
+      "azimuth": 2,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "ring_4_azimuth_4",
+      "retain": 1.0,
+      "ring": 4,
+      "azimuth": 4,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "ring_8_azimuth_2",
+      "retain": 1.0,
+      "ring": 8,
+      "azimuth": 2,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "ring_2_azimuth_8",
+      "retain": 1.0,
+      "ring": 2,
+      "azimuth": 8,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "ring_8_azimuth_8",
+      "retain": 1.0,
+      "ring": 8,
+      "azimuth": 8,
+      "noise": 0.0,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "xyz_0.01",
+      "retain": 1.0,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.01,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "xyz_0.02",
+      "retain": 1.0,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.02,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "xyz_0.05",
+      "retain": 1.0,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.05,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "xyz_0.1",
+      "retain": 1.0,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.1,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "range_0.01",
+      "retain": 1.0,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.01,
+      "noise_type": "range",
+      "phase": 0
+    },
+    {
+      "name": "range_0.02",
+      "retain": 1.0,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.02,
+      "noise_type": "range",
+      "phase": 0
+    },
+    {
+      "name": "range_0.05",
+      "retain": 1.0,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.05,
+      "noise_type": "range",
+      "phase": 0
+    },
+    {
+      "name": "range_0.1",
+      "retain": 1.0,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.1,
+      "noise_type": "range",
+      "phase": 0
+    },
+    {
+      "name": "random_0.25_xyz_0.02",
+      "retain": 0.25,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.02,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "random_0.25_xyz_0.05",
+      "retain": 0.25,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.05,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "random_0.0625_xyz_0.02",
+      "retain": 0.0625,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.02,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "random_0.0625_xyz_0.05",
+      "retain": 0.0625,
+      "ring": 1,
+      "azimuth": 1,
+      "noise": 0.05,
+      "noise_type": "xyz",
+      "phase": 0
+    },
+    {
+      "name": "ring_4_azimuth_4_range_0.02",
+      "retain": 1.0,
+      "ring": 4,
+      "azimuth": 4,
+      "noise": 0.02,
+      "noise_type": "range",
+      "phase": 0
+    }
+  ]
+}

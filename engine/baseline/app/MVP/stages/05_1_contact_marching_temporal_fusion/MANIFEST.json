@@ -1,0 +1,144 @@
+{
+  "files": [
+    {
+      "path": "README_RU.md",
+      "bytes": 7616,
+      "sha256": "5aada86a565fe147c6a5dab5bda8117c31f68f77887f21856352c9b58b24a870"
+    },
+    {
+      "path": "REQUEST_RU.txt",
+      "bytes": 26415,
+      "sha256": "4a6108f0dea60fd87e26aca068210d02500252511b4950f680c580a6ec1a4ebf"
+    },
+    {
+      "path": "src/assess.py",
+      "bytes": 4084,
+      "sha256": "35d2173a94ba2f7c893fe004ed698e82fa1bc3313da0814bcf70e40b9728c3bd"
+    },
+    {
+      "path": "src/audit.py",
+      "bytes": 1777,
+      "sha256": "8331a6b08d05cc2cf1d7b37d885915553c54545e9f0bc443d123ec77d6494a6a"
+    },
+    {
+      "path": "src/benchmark.py",
+      "bytes": 5649,
+      "sha256": "cfaa68a4ed1bcd06509c5861c4a97d94c6f438d17578dbca9bd7d5c893539e6c"
+    },
+    {
+      "path": "src/build_weighted_adapter.py",
+      "bytes": 2483,
+      "sha256": "4b7ac404a3ad483ff0ec84313b6426f7f9ec31bea423158698a9cc1d2ebcffc2"
+    },
+    {
+      "path": "src/choose_examples.py",
+      "bytes": 4283,
+      "sha256": "f3279cb6a11f49c15d3de555e52e9d1e646ea39614234541e81822f1c61c60be"
+    },
+    {
+      "path": "src/collect.py",
+      "bytes": 9677,
+      "sha256": "1a0c301113bc45b86e5dea2a227dff7eec98efbd232fe8e7c6be21b93a3d183a"
+    },
+    {
+      "path": "src/common_anchor_quality.py",
+      "bytes": 1112,
+      "sha256": "e28767ef43374707add6f8ae3234edac79e6029930f9560bfcb2b3c76a448c15"
+    },
+    {
+      "path": "src/diagnose.py",
+      "bytes": 13301,
+      "sha256": "4f882ca9b96ca1c7cfaace62c97a7469ec8011b9db130f669807f3c2458c749a"
+    },
+    {
+      "path": "src/expand_development.py",
+      "bytes": 1187,
+      "sha256": "3b95a17ffd3395730e9a6354e0d28f9cc5c96d879c4a0287c74a6e97a4d1661b"
+    },
+    {
+      "path": "src/export_las.py",
+      "bytes": 3948,
+      "sha256": "17f0bde6518312824fb84402caa04e01cb8090fa7f5204852072fd7a3e87a1b0"
+    },
+    {
+      "path": "src/fusion.py",
+      "bytes": 7226,
+      "sha256": "4bfcffd22e5e971f91ac57b34a172bd018f36c9135fc582de172c44f63134791"
+    },
+    {
+      "path": "src/fusion_common.py",
+      "bytes": 2422,
+      "sha256": "7d86698ae44ed9fbfc36328e571b2686ac2bde767d15674f1bf8801e66a0764a"
+    },
+    {
+      "path": "src/overlap_detail.py",
+      "bytes": 2933,
+      "sha256": "9385e5218dfb61d1a27b97d5947658570e8bb32a397a7ff89acda6e4124de847"
+    },
+    {
+      "path": "src/prepare_challengers.py",
+      "bytes": 731,
+      "sha256": "327f2dc41e2a961c0ef79865cbfb6770e346dd9ae4ccb0315edbc7f6fbaf2430"
+    },
+    {
+      "path": "src/prepare_final_development.py",
+      "bytes": 865,
+      "sha256": "16ed2cfeae2180ec04041b79d9fa5588c0b31a2cfaa04a68df2ec14ebfda9809"
+    },
+    {
+      "path": "src/render.py",
+      "bytes": 8647,
+      "sha256": "22128b71a4d0ed82c2991e1cf00385e2ae1ec8758dc495fcca6fbf4d3e49cb92"
+    },
+    {
+      "path": "src/report.py",
+      "bytes": 62973,
+      "sha256": "0be8cc97211127a505018b5fac3cebf571f5c2cb7e0299a31392101b54273f63"
+    },
+    {
+      "path": "src/review_suspects.py",
+      "bytes": 3641,
+      "sha256": "42e8630516a32564fdef9f9853230e9f8de5b10d3612bda3231388761a7940e2"
+    },
+    {
+      "path": "src/run_heldout.py",
+      "bytes": 406,
+      "sha256": "ccde2a345fd09ca0976514837f9c41f41825e0dc5d0c4e3187bcbb553a47ed02"
+    },
+    {
+      "path": "src/select_development.py",
+      "bytes": 3805,
+      "sha256": "7543cf2f157f4911dcb1315b69fe732230d0d054873f1e809e6ec8eb8c127625"
+    },
+    {
+      "path": "src/study.py",
+      "bytes": 4248,
+      "sha256": "e92ba32c4149535bd031e64ceaa377d21fc17332060cb5de96cc1e7f045366b9"
+    },
+    {
+      "path": "src/supplement.py",
+      "bytes": 5734,
+      "sha256": "d315dea4c8467d8b4e7e7669193fc1cd979a5651248992a9a771f23d1955813d"
+    },
+    {
+      "path": "src/verify.py",
+      "bytes": 5479,
+      "sha256": "604eaddccfb11edf65403a41bb0efcdc7be8d5bdf408dec33c0ce71211edbb83"
+    },
+    {
+      "path": "src/weighted_tracker.py",
+      "bytes": 13350,
+      "sha256": "e8f4c825f561e38f5c320c3797bf8d67c6a194eeacd3a8992b3bca6f783112dc"
+    },
+    {
+      "path": "src/weighting.py",
+      "bytes": 3348,
+      "sha256": "34376990b20f2ef57a14872fe993391ec6391762e092b9ea819559c16ce523f5"
+    },
+    {
+      "path": "tests/test_causality.py",
+      "bytes": 4909,
+      "sha256": "c0311bb9bf7c109fc2642dc22f9475b1bb61d5b4f24b13c922711447ffd4dda6"
+    }
+  ]
+}

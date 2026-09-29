@@ -1,0 +1,22 @@
+{
+  "method": "M1",
+  "window": 8.0,
+  "advance": 4.0,
+  "tail": 8.0,
+  "bin_size": 0.3,
+  "objective": "trace",
+  "refine_bound": 2.0,
+  "roll_bound": 2.0,
+  "orientation_bound": 5.0,
+  "gate": 0.03,
+  "anchor_mode": "free",
+  "plane": "midpoint",
+  "transport": "bishop",
+  "min_support": 3,
+  "support_tolerance": 0.02,
+  "overlap_tolerance": 0.03,
+  "shape_limit": 0.025,
+  "ambiguity_margin": 0.025,
+  "max_steps": 80,
+  "max_range": 150.0
+}

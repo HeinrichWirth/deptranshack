@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "split": {
+    "development": [
+      "new_data_part_01a1",
+      "new_data_part_01a2",
+      "new_data_part_01c2",
+      "new_data_part_01d1",
+      "new_data_part_21",
+      "new_data_part_22",
+      "doubleT_platform",
+      "roundT_doubleT",
+      "roundT_pressureGate_roundT"
+    ],
+    "validation": [
+      "roundT_squareT_pressureGate_squareT",
+      "squareT_platform_squareT_switch"
+    ]
+  },
+  "variants": [
+    "baseline_next",
+    "head_next",
+    "baseline_50cm",
+    "head_50cm"
+  ],
+  "primary": "head_50cm",
+  "slab_length_m": 8,
+  "minimum_displacement_m": 0.5,
+  "current_cloud_only": true,
+  "labels_are_evaluation_only": true,
+  "reference": "Unmodified v1 median-v/q75-w definition. No relabelling or new GT used for headline scores.",
+  "split_note": "Both partitions were already inspected in v1 failure audit. Validation here is a regression cohort, not an unseen final test.",
+  "pilot": "32 evenly spaced frames per development run plus every v1 accepted development error >5 cm. No validation-driven tuning.",
+  "frozen_baseline_hashes": {
+    "selected_config.json": "754d9339b78af98afdb763bb3621cc46ccaf9b4ea57742220ea41fb1e705796d",
+    "protocol.json": "e9e8e361edb1f2b6252c79793ce53df4d531f227c3c0d31f9958b42ceedb7e94",
+    "final_evaluation_lock.json": "5b1d8b88767b78710c5080560144080c940c2dbe299aeaaca476e017318832f6",
+    "per_frame_detection.csv": "e86617f46f408b2a7bf4eb2f9b600275f81398d919f1957d1e35099f770aded5",
+    "run_summary.csv": "a9fa5e47ce4c9341f1e0ed3247a559f0b43fbb958b31223d9d7b84c06ec3dc82"
+  }
+}

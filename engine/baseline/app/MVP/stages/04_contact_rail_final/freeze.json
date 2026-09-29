@@ -1,0 +1,44 @@
+{
+  "title": "FINAL CONTACT RAIL STEP2",
+  "status": "FROZEN",
+  "primary": "F4-NU",
+  "version": "1.0.0-confidence-pre-guard.1",
+  "confidence": "patched pre-guard runner-up bookkeeping",
+  "production_config_sha256": "729b43d66a13dcfebf6d6a2ad565eafdf14a54c9fd517c93aec759d8e3b798fa",
+  "code_sha256": "dd60d32c707635442e9e4b56dc84e7078d181b538fda8595351c27f5f32eef02",
+  "template_sha256": "3489fb5f0e7042e7c022eb13d88cc28163f4d2f28f32d2b1ebdf9c05a694ef0e",
+  "code_sha_scope": "contact_rail_step2/detector.py exact bytes",
+  "production_path": "C:\\Users\\heinrich.wirth\\deptrans\\MVP\\stages\\04_contact_rail_final",
+  "prediction_changed": 0,
+  "inputs": 101093,
+  "scenarios": 276,
+  "original_validation_frames": 1422,
+  "acceptance": {
+    "A": true,
+    "B": true,
+    "C": true,
+    "D": true,
+    "E": true,
+    "F": true
+  },
+  "known_failure": {
+    "confidence_old": 0.8505216821870885,
+    "confidence_new": 0.31082497518060914
+  },
+  "audit_relative_path": "../03_3_contact_confidence_fix/results_contact_confidence_fix",
+  "audit_protocol_sha256": "aea14dc9ff02549f9cd8de2f6201b179b7eabc2612db5afbd44192d4c9b7128b",
+  "confidence_semantics": "heuristic relative reliability; not calibrated probability; status from frozen old decision",
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1"
+  },
+  "standalone_tests": 15,
+  "reopen_only": [
+    "new real LiDAR",
+    "changed CR geometry",
+    "new infrastructure type",
+    "reproducible production failure"
+  ],
+  "statement": "STEP2 CONTACT RAIL DETECTION IS FROZEN FOR DOWNSTREAM DEVELOPMENT."
+}

@@ -1,0 +1,58 @@
+{
+  "evaluation_revision": "v2_gt_distance_checked",
+  "detector_version": 2,
+  "source_frames": 6551,
+  "variants": [
+    "baseline_next",
+    "head_next",
+    "baseline_50cm",
+    "head_50cm"
+  ],
+  "primary": "head_50cm",
+  "split": {
+    "development": [
+      "new_data_part_01a1",
+      "new_data_part_01a2",
+      "new_data_part_01c2",
+      "new_data_part_01d1",
+      "new_data_part_21",
+      "new_data_part_22",
+      "doubleT_platform",
+      "roundT_doubleT",
+      "roundT_pressureGate_roundT"
+    ],
+    "validation": [
+      "roundT_squareT_pressureGate_squareT",
+      "squareT_platform_squareT_switch"
+    ]
+  },
+  "gt_gate": {
+    "minimum_m": 1.48,
+    "maximum_m": 1.62,
+    "inclusive": true,
+    "distance": "Euclidean distance between two GT centres in the (v,w) plane",
+    "threshold_origin": "Existing v2 gauge_soft interval, fixed before this full rerun; not a surveyed tolerance",
+    "inputs": "Two derived GT centres only; no predictions, confidence, errors, run or frame identity"
+  },
+  "reference_coordinates": "Original median-v/q75-w centres retained verbatim. No replacement, snapping or relabelling.",
+  "rejected_reference": "Excluded only from checked numerical scores; retained in raw scores and coverage counts.",
+  "split_note": "Retrospective regression on already inspected data, not a new independent test.",
+  "sensitivity_intervals_m": [
+    [
+      1.45,
+      1.65
+    ],
+    [
+      1.48,
+      1.62
+    ],
+    [
+      1.5,
+      1.62
+    ],
+    [
+      1.52,
+      1.62
+    ]
+  ]
+}
