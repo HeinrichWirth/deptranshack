@@ -89,7 +89,8 @@ def geometry_worker(ring,inbox,modelboxes,retrybox,stop,ready,out,cfg):
                 checks.append(dict(model_source=m['meta']['source_frame'],**check))
                 if check['accepted']:selected=m;local=candidate;break
             cached=valid_state(state,meta,time.perf_counter());fallback=(state['pair_world']-P[:3,3])@P[:3,:3] if cached else local
-            chosen=select(local,fallback,near,contact_status=contact_status,fresh_near=True,vertical_m=cfg['primary_vertical_agreement_m'],lateral_m=cfg['primary_lateral_agreement_m'])
+            primary_observed_end=float(-((selected['observed_end_world']-P[:3,3])@P[:3,:3])[:,1].mean()) if selected is not None else None
+            chosen=select(local,fallback,near,contact_status=contact_status,fresh_near=True,vertical_m=cfg['primary_vertical_agreement_m'],lateral_m=cfg['primary_lateral_agreement_m'],primary_observed_end=primary_observed_end)
             active=state if chosen['fallback'] and cached else selected;pair=chosen['pair']
             observed_end=(active['observed_end_world']-P[:3,3])@P[:3,:3] if active is not None else near[-1]
             if -observed_end[:,1].mean() < -near[-1,:,1].mean():observed_end=near[-1]

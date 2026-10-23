@@ -1,35 +1,224 @@
 {
-  "date": "2026-09-29",
-  "source_files_verified": 416,
-  "cross_build": {
-    "cases": 317,
-    "all_exact": true
+  "version": "2026.10.23",
+  "docker_build": true,
+  "unit_tests": {
+    "passed": 21,
+    "failed": 0
   },
-  "envelope": {
+  "http_excerpt": {
+    "job": "38188d2827764aa49571ea5f530739cb",
     "pass_": true,
-    "frames": 356,
-    "all_source_point_indices_exact": true,
-    "sha256": "3f116f3fa67c860b9b93c31225a2db8235d0d380ade861b1a94ddd3391da81fb"
-  },
-  "web_run": {
-    "job": "a36dfd7eb2d541afa1cf4209f4462828",
-    "pass_": true,
-    "received": 1510,
-    "processed": 390,
+    "received": 151,
+    "processed": 22,
     "live_slice_seen": true,
     "temporary_input_removed": true,
-    "raw_tracks": 19,
-    "confirmed": 12
+    "raw_tracks": 2,
+    "confirmed": 1,
+    "source_messages": 151,
+    "description": "First 151 unchanged messages of the supplied recording; not a full 1510-message replay"
   },
-  "ui": {
-    "pass": true,
-    "job": "00000000000000000000000000000079",
-    "errors": []
+  "cross_platform": {
+    "pass_": false,
+    "float_absolute_tolerance_m": 1e-08,
+    "frames": [
+      {
+        "frame": 12,
+        "checks": {
+          "pair": {
+            "pass_": false,
+            "shape": [
+              98,
+              2,
+              3
+            ],
+            "max_abs_error": null,
+            "exact": false
+          },
+          "contact": {
+            "pass_": false,
+            "shape": [
+              98,
+              3
+            ],
+            "max_abs_error": null,
+            "exact": false
+          },
+          "curve": {
+            "pass_": false,
+            "shape": [
+              21,
+              3
+            ],
+            "max_abs_error": 12.479489790463617,
+            "exact": false
+          },
+          "indices": {
+            "pass_": false,
+            "shape": [
+              8736
+            ],
+            "max_abs_error": null,
+            "exact": false
+          },
+          "point_state": {
+            "pass_": false,
+            "shape": [
+              8736
+            ],
+            "max_abs_error": null,
+            "exact": false
+          }
+        }
+      },
+      {
+        "frame": 15,
+        "checks": {
+          "pair": {
+            "pass_": false,
+            "shape": [
+              35,
+              2,
+              3
+            ],
+            "max_abs_error": 1.5462615854389128e-08,
+            "exact": false
+          },
+          "contact": {
+            "pass_": false,
+            "shape": [
+              35,
+              3
+            ],
+            "max_abs_error": 1.4825135785656585e-08,
+            "exact": false
+          },
+          "curve": {
+            "pass_": false,
+            "shape": [
+              7,
+              3
+            ],
+            "max_abs_error": 2.422776712585062e-08,
+            "exact": false
+          },
+          "indices": {
+            "pass_": true,
+            "shape": [
+              8321
+            ],
+            "max_abs_error": 0.0,
+            "exact": true
+          },
+          "point_state": {
+            "pass_": true,
+            "shape": [
+              8321
+            ],
+            "max_abs_error": 0.0,
+            "exact": true
+          }
+        }
+      },
+      {
+        "frame": 131,
+        "checks": {
+          "pair": {
+            "pass_": false,
+            "shape": [
+              80,
+              2,
+              3
+            ],
+            "max_abs_error": 0.11556557320125194,
+            "exact": false
+          },
+          "contact": {
+            "pass_": false,
+            "shape": [
+              80,
+              3
+            ],
+            "max_abs_error": 0.10831957826083283,
+            "exact": false
+          },
+          "curve": {
+            "pass_": false,
+            "shape": [
+              19,
+              3
+            ],
+            "max_abs_error": 0.1081723341905132,
+            "exact": false
+          },
+          "indices": {
+            "pass_": false,
+            "shape": [
+              5261
+            ],
+            "max_abs_error": null,
+            "exact": false
+          },
+          "point_state": {
+            "pass_": false,
+            "shape": [
+              5261
+            ],
+            "max_abs_error": null,
+            "exact": false
+          }
+        }
+      },
+      {
+        "frame": 794,
+        "checks": {
+          "pair": {
+            "pass_": false,
+            "shape": [
+              52,
+              2,
+              3
+            ],
+            "max_abs_error": 7.887777160320297e-07,
+            "exact": false
+          },
+          "contact": {
+            "pass_": false,
+            "shape": [
+              52,
+              3
+            ],
+            "max_abs_error": 7.877871326389396e-07,
+            "exact": false
+          },
+          "curve": {
+            "pass_": false,
+            "shape": [
+              11,
+              3
+            ],
+            "max_abs_error": 7.067531901938651e-07,
+            "exact": false
+          },
+          "indices": {
+            "pass_": false,
+            "shape": [
+              4160
+            ],
+            "max_abs_error": null,
+            "exact": false
+          },
+          "point_state": {
+            "pass_": false,
+            "shape": [
+              4160
+            ],
+            "max_abs_error": null,
+            "exact": false
+          }
+        }
+      }
+    ]
   },
-  "automatic_grouping": {
-    "radius_m": 10,
-    "accepted_run_confirmed": 9,
-    "web_run_confirmed": 9,
-    "pairs_3_4_and_10_11_merged": true
-  }
+  "full_recording_replay": false,
+  "ros2_dds_requalified": false
 }

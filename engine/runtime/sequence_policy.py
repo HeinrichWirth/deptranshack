@@ -28,8 +28,35 @@ def agreement(prior, near, vertical_m=.03, lateral_m=.10):
                 lateral_p90_m=float(x),vertical_p90_m=float(z),lateral_limit_m=lateral_m,vertical_limit_m=vertical_m)
 
 
-def select(primary, fallback, near, *, contact_status, fresh_near, vertical_m=.03, lateral_m=.10):
+def select(primary, fallback, near, *, contact_status, fresh_near, vertical_m=.03, lateral_m=.10, primary_observed_end=None):
     """contact_status comes ONLY from a completed scheduled full pipeline run."""
+    # A locally successful but truncated march must not erase a still-valid
+    # observed tail. Caller applies the existing age/pose-generation checks.
+    # No object detections or desired range enter this decision.
+    if fresh_near and primary is not None and fallback is not None and fallback is not primary:
+        old=np.asarray(fallback,float);new=np.asarray(primary,float)
+        old_check=agreement(old,near,vertical_m,lateral_m)
+        new_check=agreement(new,near,vertical_m,lateral_m)
+        if old_check['accepted'] and new_check['accepted']:
+            old_end=-old[-1,:,1].mean()
+            new_end=-new[-1,:,1].mean() if primary_observed_end is None else float(primary_observed_end)
+            if old_end>new_end+4.:
+                # Compare the measured common prefix too. A conflicting new
+                # path is not evidence that the old distant shape still holds.
+                grid=np.arange(2.,min(old_end,new_end)+1e-6,.5)
+                def project(p):
+                    p=p[:,np.argsort(p[np.argmin(abs(-p.mean(1)[:,1]-4)),:,0])]
+                    return np.stack([np.column_stack([np.interp(grid,-p[:,side,1],p[:,side,k]) for k in (0,2)]) for side in (0,1)])
+                delta=np.quantile(abs(project(old)-project(new)),.9,axis=(0,1))
+                if delta[0]<=lateral_m and delta[1]<=.08:
+                    pair,join=attach_near(old,near)
+                    return dict(pair=pair,scope='HELD_OBSERVED_TAIL_AFTER_SHORT_MARCH',fallback=True,
+                                agreement=old_check,retry=True,reanchor=None,join_status=join,
+                                prefix_lateral_p90_m=float(delta[0]),prefix_vertical_p90_m=float(delta[1]))
+                # Request a fresh complete solve instead of accepting either
+                # incompatible far estimate as a confirmed corridor.
+                return dict(pair=near.copy(),scope='NEAR_ONLY_CONFLICTING_PATHS',fallback=False,
+                            agreement=new_check,retry=True,reanchor=None)
     if contact_status in ('NOT_FOUND','AMBIGUOUS') and fresh_near and fallback is not None:
         r=reanchor(fallback,near)
         if r['status']=='REANCHORED':

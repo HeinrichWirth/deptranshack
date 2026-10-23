@@ -35,11 +35,17 @@ def infer_native(owner,source,seed,template,cfg):
             window=8,history=12,anchor_v=b['anchor'][0],anchor_w=b['anchor'][1],new_support_n=len(b['keys']),selected_candidate_rank=b['rank'],
             confidence=b['confidence'],continuity_score=b['continuity_score'],template_score=b['template_score'],range_far=float(ranges.max()),range_near=float(ranges.min())))
     state=rep('state',np.uint8);ranges=np.linalg.norm(cloud['xyz'][ix],axis=1)
+    # Window origins may advance across a sparse strip. Count actual forward
+    # displacement, rather than assuming every iteration always advances 4 m.
+    stations=[0.]
+    for previous,current_block in zip(blocks,blocks[1:]):
+        delta=np.asarray(current_block['plane_origin'])-np.asarray(previous['plane_origin'])
+        stations.append(stations[-1]+float(delta@np.asarray(previous['basis_columns'])[0]))
     pred=dict(status='STOPPED',reason=out['reason'],seed=seed,config=cfg,steps=steps,hypotheses=[],indices=ix,
         point_step=rep('step',np.uint16),point_state=state,local_uvw=arr('uvw'),template_residual=arr('residual'),
         confidence=rep('confidence'),continuity_score=rep('continuity_score'),template_score=rep('template_score'),track_prior_score=rep('track_prior_score'),
         point_anchor=np.concatenate([np.repeat(np.asarray(b['anchor'])[None],len(b['keys']),0) for b in blocks]),
-        s_from_seed=np.concatenate([4*b['step']+np.asarray(b['uvw'])[:,0] for b in blocks]),curve=np.asarray([b['anchor_3d'] for b in blocks if b['state']==2]),
+        s_from_seed=np.concatenate([station+np.asarray(b['uvw'])[:,0] for station,b in zip(stations,blocks)]),curve=np.asarray([b['anchor_3d'] for b in blocks if b['state']==2]),
         max_search_hypothesis_range=out['search_range'],max_selected_search_range=out['search_range'],max_tentative_range=float(ranges[state==1].max()) if np.any(state==1) else 0.,
         max_confirmed_observed_range=float(ranges[state==2].max()),max_unobserved_length=0,path_score=out['path_score'],total_ms=(time.perf_counter()-begin)*1000)
     return pred,cloud

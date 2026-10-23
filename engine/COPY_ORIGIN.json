@@ -1,5 +1,5 @@
 {
-  "source": "COPY_MAIN",
+  "source": "Rail Inspector 2026.10.23; based on a6d2cfc",
   "files": {
     "audit_registration_hotspots.py": "8eed4949e50b0c0ff27cc9374cc1c24ee94ee178240fad581c59af6171b70b5c",
     "benchmark_extension5.py": "d1a2b14b04cfff720371ab984d6a7f8aa238a5bf542f9cd2f74c495e2f1f964c",
@@ -75,7 +75,7 @@
     "app/MVP/c4_v2/gallery.py": "21010bb3c2b2c588432ac5198e83fc1eabc155965574fba445e9c2aba9512e07",
     "app/MVP/c4_v2/integrity.py": "f89f1cf03a277e38178b4e41ba745676b8f04a6e306ccb9803671a6763853769",
     "app/MVP/c4_v2/native_api.py": "3342e93d9f6cea4b9042d120d4b3da37cb9cd22a228df3b51450378e0b700f2f",
-    "app/MVP/c4_v2/native_engine.py": "13a541077bb67417d33d7ca7ff68ef764d514178e29189d71753da479defc6fb",
+    "app/MVP/c4_v2/native_engine.py": "01642863769bc2233080723412893a995b44ae345e7e7c01313a596b3bc5e2f8",
     "app/MVP/c4_v2/persistent.py": "cdabc0c3b81e6d817cad84844fcb2146da2e6db602964e8d40bb78ebc5134cf8",
     "app/MVP/c4_v2/plan.json": "ca2f7c99e07a7543e38d903e5ee5b4a5492b896cde89bf374792fc0b7e783c86",
     "app/MVP/c4_v2/prepare_docker.py": "18b614fe229680f9c2f7ad03a14b363b7101c26d3638c5305f81e8ef4ec438bc",
@@ -220,7 +220,7 @@
     "app/MVP/realtime_final/native/.dockerignore": "4214574062c2c78724df4efedc813c7d80a0a718e629fa97e769fc8f1e535feb",
     "app/MVP/realtime_final/native/CMakeLists.txt": "2f7e093d030089e6361554d6f7bf2d75de9781151ac2143068eceaa18b31b7cf",
     "app/MVP/realtime_final/native/Dockerfile": "6f7899b6f9c039ad7694acd482a0c3319109cd94736f1d2bea2632217697e98d",
-    "app/MVP/realtime_final/native/march.hpp": "bf72cc7113bf9eacf3786f3ac26daf93d29663492fbf558fd3b02312b7093749",
+    "app/MVP/realtime_final/native/march.hpp": "38a1094af89a2cd90239d6e1523c1ac4dc710d19d5198eba2c194591e9ed5775",
     "app/MVP/realtime_final/native/solver.cpp": "006e776c808880eb71cb3b53b6ed11d59f12b57281afcb84bde3550944aa87a9",
     "app/MVP/realtime_final/native/trace.hpp": "d4a92493deaf335eeae2107a7fd803668137d4f2deabdeeaec010a6f9dead703",
     "app/MVP/realtime_final/native/_c4_rt.cpython-312-x86_64-linux-gnu.so": "6e1e483443df33ea01211a41a5b15570b40ea0db07098681e9ea7b1e58e24d6f",
@@ -409,5 +409,6 @@
     "results",
     "reference"
   ],
-  "exact": true
+  "exact": true,
+  "revision_note": "Bounded sparse-window recovery and compatible observed-tail retention. See docs/ALGORITHM_UPDATE.md."
 }
